@@ -3,8 +3,7 @@ from statsmodels.tsa.seasonal import STL
 
 
 class Processing:
-    '''
-    Class for Google Trends interest over time processing
+    '''Class for Google Trends interest over time processing
     '''
 
     def __init__(
