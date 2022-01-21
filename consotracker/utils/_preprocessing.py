@@ -12,7 +12,7 @@ class Processing:
         seasonality='stl',
         pct_change=False,
         lag_order=0
-        ):
+    ):
         '''
         Parameters
         ----------
@@ -39,13 +39,9 @@ class Processing:
         Notes
         -----
         Processing is performed in accordance with the order of the arguments.
-        E.g.: if `seasonality=='stl'`, `pct_change=='True'` and `lag_order != 0`,
-        lagged data are added after deseasonalization is performed and
-        pct change computed.
-
-        Returns
-        -------
-        A processed pandas DataFrame.
+        E.g.: if `seasonality=='stl'`, `pct_change=='True'` and
+        `lag_order != 0`, lagged data are added after deseasonalization is
+        performed and pct change computed.
         '''
         self.base_date = base_date
         self.seasonality = seasonality
@@ -53,6 +49,16 @@ class Processing:
         self.lag_order = lag_order
 
     def fit(self, X):
+        '''Implement processing
+
+        Parameters
+        ----------
+        X {pandas.DataFrame} -- The input samples.
+
+        Returns
+        -------
+        A processed pandas DataFrame.
+        '''
         if self.base_date is not None:
             X = self._growth_wrt_date(X, self.base_date)
         if self.seasonality is not None:
@@ -61,6 +67,8 @@ class Processing:
             X = self._to_growth_rate(X)
         if self.lag_order != 0:
             X = self._add_lag(X, order=self.lag_order)
+
+        X = X.reset_index()
         return X
 
     def _growth_wrt_date(self, X, date):
