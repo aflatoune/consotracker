@@ -1,6 +1,9 @@
-import statsmodels.api as sm
 import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from consotracker.models import Model
 from dateutil.relativedelta import relativedelta
+
 
 class LinearRegression(Model):
     """Class for linear model
@@ -11,7 +14,9 @@ class LinearRegression(Model):
 
     def fit(self):
         X = sm.add_constant(self.exog)
+        X = X.drop(["date"], axis=1)
         y = self.endog
+        y = y.drop(["date"], axis=1)
         lm = sm.OLS(y, X)
         self.model = lm.fit()
         self.in_values = self.model.fittedvalues
@@ -21,12 +26,18 @@ class LinearRegression(Model):
         X = sm.add_constant(X, has_constant="add")
         self.out_values = self.model.predict(X)
 
-        first_date = exog.index.min()
-        self.dates = pd.date_range(start=first_date, end=first_date + relativedelta(months=1))
+        first_date = self.exog.date.min()
+        last_date = self.exog.date.max() + relativedelta(months=1)
+        freq = pd.infer_freq(self.exog.date)
+        self.dates = pd.date_range(start=first_date, end=last_date, freq=freq)
 
-        self.predicted_values = pd.DataFrame(
+        self.predicted_df = pd.DataFrame(
             {
                 "date": self.dates,
-                "values": np.concatenate([self.in_values, self.out_values])
+                "obs": self.endog,
+                "pred": np.concatenate([self.in_values, self.out_values])
             }
-    )
+        )
+
+        def __str__(self):
+            return "Linear regression"
