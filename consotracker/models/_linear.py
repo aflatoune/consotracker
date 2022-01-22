@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 import statsmodels.api as sm
 from consotracker.models import Model
-from dateutil.relativedelta import relativedelta
 
 
 class LinearRegression(Model):
@@ -22,14 +21,17 @@ class LinearRegression(Model):
         self.in_values = self.model.fittedvalues
 
     def predict(self, X):
-        X = X.values.reshape(1, -1)
+        if isinstance(X, pd.Series):
+            X = X.values.reshape(1, -1)
         X = sm.add_constant(X, has_constant="add")
         self.out_values = self.model.predict(X)
 
         first_date = self.exog.date.min()
-        last_date = self.exog.date.max() + relativedelta(months=1)
+        periods = self.exog.shape[0] + X.shape[0]
         freq = pd.infer_freq(self.exog.date)
-        self.dates = pd.date_range(start=first_date, end=last_date, freq=freq)
+        self.dates = pd.date_range(
+            start=first_date, periods=periods, freq=freq
+        )
 
         self.predicted_df = pd.DataFrame(
             {

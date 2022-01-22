@@ -23,8 +23,10 @@ class Model(ABC):
             raise ValueError(
                 "Both endog and exog must contain a \"date\" column.")
         else:
-            if not is_datetime(data["date"]):
+            if not is_datetime(data.date):
                 raise ValueError("\"date\" must be of type datetime64.")
+            if pd.infer_freq(data.date) is None:
+                raise ValueError("Unrecognized frequency for \"date\".")
 
     @abstractmethod
     def fit(self):
@@ -34,20 +36,18 @@ class Model(ABC):
     def predict(self):
         pass
 
-    def plot(self, start=None, figsize=None, **kwargs):
+    def plot(self, start=None, **kwargs):
         predicted_df = self.predicted_df
         if predicted_df is None:
             raise ValueError("cannot call plot() before predict().")
+        predicted_df = predicted_df[predicted_df.date >= start]
 
-        if figsize is None:
-            figsize = (11, 6)
-
-        title = kwargs.get(title, "")
-        pred_color = kwargs.get(pred_color, "darkorange")
-        obs_color = kwargs.get(obs_color, "darkblue")
-        xlabel = kwargs.get(xlabel, "")
-        ylabel = kwargs.get(ylabel, "")
-        anchor = [0.5, 0]
+        figsize = kwargs.get("figsize", (11, 6))
+        title = kwargs.get("title", None)
+        pred_color = kwargs.get("pred_color", "darkorange")
+        obs_color = kwargs.get("obs_color", "darkblue")
+        xlabel = kwargs.get("xlabel", None)
+        ylabel = kwargs.get("ylabel", None)
 
         fig, ax = plt.subplots(figsize=figsize)
         ax.grid(visible=True, which="major")
@@ -58,6 +58,6 @@ class Model(ABC):
         ax.margins(x=0)
         fig.autofmt_xdate(rotation=90)
         plt.title(title)
-        plt.legend(["obs", "pred"], bbox_to_anchor=anchor,
+        plt.legend(["obs", "pred"], bbox_to_anchor=[0.5, 0],
                    loc="lower center", ncol=2)
         return ax
