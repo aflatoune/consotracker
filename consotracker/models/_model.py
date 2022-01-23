@@ -37,6 +37,17 @@ class Model(ABC):
         pass
 
     def plot(self, start=None, **kwargs):
+        """Plot method for class Method
+
+        Parameters
+        ----------
+        start {str}
+            Indicates the begining of the x axis.
+
+        Returns
+        -------
+        Matplotlib Axes object.
+        """
         predicted_df = self.predicted_df
         if predicted_df is None:
             raise ValueError("cannot call plot() before predict().")

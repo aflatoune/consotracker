@@ -53,7 +53,8 @@ class Processing:
 
         Parameters
         ----------
-        X {pandas.DataFrame} -- The input samples.
+        X {pandas.DataFrame}
+            The input samples.
 
         Returns
         -------
