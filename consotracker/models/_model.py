@@ -42,7 +42,7 @@ class Model(ABC):
         Parameters
         ----------
         start {str}
-            Indicates the begining of the x axis.
+            Indicates the begining of the x axis (must be in YYYY/MM/DD format).
 
         Returns
         -------
