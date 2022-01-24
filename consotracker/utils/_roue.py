@@ -1,4 +1,3 @@
-from itertools import Predicate
 import pandas as pd
 import numpy as np
 import logging as lg
@@ -33,7 +32,8 @@ class ROUE():
             to be observed when training `model` for the first time, the 2nd one
             indicates the last date for which an out-of-sample prediction is
             computed. Concretely, a oot prediction is made for all dates such
-            that forecast_window[1] < date =< forecast_window[2].
+            that forecast_window[1] < date =< forecast_window[2] (must be in
+            YYYY/MM/DD format).
 
         n_splits {int} -- (default: {None})
             Number of splits.
@@ -71,28 +71,40 @@ class ROUE():
             y = y.drop(["date"], axis=1)
         if "date" in X.columns:
             X = X.drop(["date"], axis=1)
+        if X.shape[0] != y.shape[0]:
+            raise ValueError("X and y must have the same numbers of samples.")
 
-        tscv = TimeSeriesSplit(n_splits=self.n_splits, test_size=1).split(y)
+        tscv = TimeSeriesSplit(n_splits=self.n_splits, test_size=1)
         self.gridcv = GridSearchCV(estimator=self.model, cv=tscv,
                                    param_grid=self.param_grid,
                                    verbose=self.verbose).fit(X, y)
 
-        best_model = self.gridcv.best_estimator_
-        in_values = best_model.predict(X.iloc[:-self.n_splits,:])
         out_values = []
-        for train_index, test_index in tscv:
-            y_pred = best_model.predict(X.values.reshape(1,-1))
-            out_values.append(out_values)
+        best_model = self.gridcv.best_estimator_
+        indexes = tscv.split(X)
+
+        lg.info("Model selection is over. Refitting the best model to get",
+                "fitted and predicted values.")
+        first_idx, *other_idx = indexes
+        best_model.fit(X.loc[first_idx[0]], y.loc[first_idx[0]])
+        in_values = best_model.predict(X.loc[first_idx[0]])
+        y_pred = best_model.predict(X.loc[first_idx[1]])
+        out_values.append(y_pred)
+        for train_index, test_index in other_idx(X):
+            best_model.fit(X.loc[train_index], y.loc[train_index])
+            y_pred = best_model.predict(
+                X.loc[test_index].values.reshape(1, -1))
+            out_values.append(y_pred)
+        out_values = np.concatenate(out_values)
 
         self.predicted_df = pd.DataFrame(
             {
-                "date": self.dates,
                 "obs": y,
                 "pred": np.concatenate([in_values, out_values])
             }
         )
 
-    def plot(self):
+    def plot(self,):
         if not hasattr(self, "gridcv"):
             raise ValueError("cannot call plot() before fit()")
         pass
