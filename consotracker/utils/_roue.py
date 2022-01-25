@@ -8,15 +8,16 @@ from sklearn.model_selection import TimeSeriesSplit, GridSearchCV
 
 
 class ROUE():
-    """"Class implementing rolling-origin-update evaluation (ROUE).
-    Relies on sklearn TimeSeriesSplit and GridSearchCV classes.
+    """Class implementing rolling-origin-update evaluation (ROUE).
     """
 
     def __init__(self,
                  model,
                  param_grid,
+                 scoring="neg_mean_absolute_error",
                  n_splits=None,
                  forecast_window=None,
+                 refit = False,
                  verbose=0):
         """
         Parameters
@@ -26,6 +27,10 @@ class ROUE():
 
         params {dict}
             Dictionary with parameters names as keys and lists of paramater
+
+        scoring {str} -- (default: {"neg_mean_absolute_error"})
+            Strategy to evaluate the performance of the cross-validated model on the
+            test set.
 
         forecast_window {tuple} -- (default: {None})
             A tuple of two strings: the 1st indicates the last date supposed
@@ -37,6 +42,10 @@ class ROUE():
 
         n_splits {int} -- (default: {None})
             Number of splits.
+
+        refit {bool} -- (default: {False})
+            Refit the best estimator on the rolling train/test indexes to get
+            fitted and predicted values.
         """
         if count_not_none(forecast_window, n_splits) != 1:
             raise ValueError("Exactly one of forecast_window and n_splits",
@@ -52,8 +61,10 @@ class ROUE():
 
         self.model = model
         self.param_grid = param_grid
+        self.scoring = scoring
         self.forecast_window = forecast_window
         self.n_splits = n_splits
+        self.refit = refit
         self.verbose = verbose
 
     def fit(self, X, y):
@@ -67,55 +78,74 @@ class ROUE():
             Target relative to X.
         """
         if "date" in y.columns:
-            self.dates = y.date
             y = y.drop(["date"], axis=1)
         if "date" in X.columns:
             X = X.drop(["date"], axis=1)
-        if X.shape[0] != y.shape[0]:
-            raise ValueError("X and y must have the same numbers of samples.")
 
         tscv = TimeSeriesSplit(n_splits=self.n_splits, test_size=1)
-        self.gridcv = GridSearchCV(estimator=self.model, cv=tscv,
+        self.gridcv = GridSearchCV(estimator=self.model,
+                                   cv=tscv,
+                                   scoring=self.scoring,
                                    param_grid=self.param_grid,
                                    verbose=self.verbose).fit(X, y)
 
-        out_values = []
-        best_model = self.gridcv.best_estimator_
-        indexes = tscv.split(X)
+        if self.refit:
+            out_values = []
+            best_model = self.gridcv.best_estimator_
+            indexes = tscv.split(X)
+            first_idx, *other_idx = indexes
 
-        lg.info("Model selection is over. Refitting the best model to get",
-                "fitted and predicted values.")
-        first_idx, *other_idx = indexes
-        best_model.fit(X.loc[first_idx[0]], y.loc[first_idx[0]])
-        in_values = best_model.predict(X.loc[first_idx[0]])
-        y_pred = best_model.predict(X.loc[first_idx[1]])
-        out_values.append(y_pred)
-        for train_index, test_index in other_idx(X):
-            best_model.fit(X.loc[train_index], y.loc[train_index])
-            y_pred = best_model.predict(
-                X.loc[test_index].values.reshape(1, -1))
-            out_values.append(y_pred)
-        out_values = np.concatenate(out_values)
+            # Get fitted pred
+            best_model.fit(X.loc[first_idx[0]], y.loc[first_idx[0]])
+            in_values = best_model.predict(X.loc[first_idx[0]])
+            out_values.append(best_model.predict(X.loc[first_idx[1]]))
 
-        self.predicted_df = pd.DataFrame(
-            {
-                "obs": y,
-                "pred": np.concatenate([in_values, out_values])
-            }
-        )
+            # Get test pred
+            for train_index, test_index in other_idx:
+                best_model.fit(X.loc[train_index], y.loc[train_index])
+                y_pred = best_model.predict(
+                    X.loc[test_index].values.reshape(1, -1))
+                out_values.append(y_pred)
 
-    def plot(self,):
-        if not hasattr(self, "gridcv"):
-            raise ValueError("cannot call plot() before fit()")
-        pass
+            out_values = np.concatenate(out_values)
+            pred = np.concatenate([in_values, out_values])
+            pred = pd.DataFrame(pred, columns=["pred"])
+            self.predicted_df = pd.concat(
+                [y.rename(columns={y.columns[0]: "obs"}), pred], axis=1
+                )
 
-    def plot_params_score(self, figsize=(15, 5)):
+    def plot(self, date=None):
         """
         Parameters
         ----------
-        gridcv {object}
-            A trained GridSearchCV object.
+        date {str} --(default: {None})
+            String indicating the first and the last date of the plot
+            (dates must be in YYYY/MM/DD format).
 
+        Returns
+        -------
+        Matplotlib Axes object.
+        """
+        if not self.refit:
+            raise ValueError("cannot call plot() when refit is False")
+        else:
+            predicted_df = self.predicted_df
+
+        if date is None:
+            abscissa = range(predicted_df.shape[0])
+        else:
+            abscissa = pd.date_range(start=date,
+                                     periods=predicted_df.shape[0],
+                                     freq="MS")
+
+        fig, ax = plt.subplots(figsize=(16, 9))
+        ax.plot(abscissa, predicted_df.obs)
+        ax.plot(abscissa, predicted_df.pred)
+        plt.legend(["obs", "pred"])
+        return ax
+
+    def plot_params_score(self, figsize=(15, 5)):
+        """
         Returns
         -------
         Matplotlib Axes object.
