@@ -32,6 +32,9 @@ class ROUE():
             Strategy to evaluate the performance of the cross-validated model on the
             test set.
 
+        n_splits {int} -- (default: {None})
+            Number of splits.
+
         forecast_window {tuple} -- (default: {None})
             A tuple of two strings: the 1st indicates the last date supposed
             to be observed when training `model` for the first time, the 2nd one
@@ -39,9 +42,6 @@ class ROUE():
             computed. Concretely, a oot prediction is made for all dates such
             that forecast_window[1] < date =< forecast_window[2] (must be in
             YYYY/MM/DD format).
-
-        n_splits {int} -- (default: {None})
-            Number of splits.
 
         refit {bool} -- (default: {False})
             Refit the best estimator on the rolling train/test indexes to get
@@ -72,7 +72,7 @@ class ROUE():
         Parameters
         ----------
         X {pd.DataFrame}
-            Training data.
+            Features data.
 
         y {pd.DataFrame}
             Target relative to X.
@@ -118,7 +118,7 @@ class ROUE():
         """
         Parameters
         ----------
-        date {str} --(default: {None})
+        date {str} -- (default: {None})
             String indicating the first and the last date of the plot
             (dates must be in YYYY/MM/DD format).
 
