@@ -10,23 +10,8 @@ class Model(ABC):
 
     predicted_df = None
 
-    def __init__(self, endog=None, exog=None):
-        self.endog = endog
-        self.exog = exog
-        if endog is not None:
-            self._check_validity(endog)
-        if exog is not None:
-            self._check_validity(exog)
-
-    def _check_validity(self, data):
-        if "date" not in data.columns:
-            raise ValueError(
-                "Both endog and exog must contain a \"date\" column.")
-        else:
-            if not is_datetime(data.date):
-                raise ValueError("\"date\" must be of type datetime64.")
-            if pd.infer_freq(data.date) is None:
-                raise ValueError("Unrecognized frequency for \"date\".")
+    def __init__(self, params):
+        self.params = params
 
     @abstractmethod
     def fit(self):
