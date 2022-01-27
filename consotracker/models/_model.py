@@ -26,7 +26,7 @@ class Model(ABC):
 
         Parameters
         ----------
-        start {str}
+        start {str} -- (default: {None})
             Indicates the begining of the x axis (must be in YYYY/MM/DD format).
 
         Returns
@@ -36,7 +36,9 @@ class Model(ABC):
         predicted_df = self.predicted_df
         if predicted_df is None:
             raise ValueError("cannot call plot() before predict().")
-        predicted_df = predicted_df[predicted_df.date >= start]
+
+        if start is not None:
+            predicted_df = predicted_df[predicted_df.date >= start]
 
         figsize = kwargs.get("figsize", (11, 6))
         title = kwargs.get("title", None)

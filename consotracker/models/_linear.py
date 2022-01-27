@@ -11,18 +11,20 @@ class LinearRegression(Model):
     def __init__(self, params=None):
         super().__init__(params)
 
-    def fit(self, remove_obs=1):
+    def fit(self, X, y):
         """
         Parameters
         ----------
-        remove_obs {int} -- (default: {1})
-            Number of observations to remove when fitting the model. Points are
-            removed starting from the end.
+        X {pd.DataFrame}
+            Features data.
+
+        y {pd.DataFrame}
+            Target relative to X.
         """
-        X = sm.add_constant(self.exog)
-        X = X.iloc[:-remove_obs,:]
-        y = self.endog
-        lm = sm.OLS(y, X)
+        self.dates = X.index
+        self.endog = y.values.flatten()
+        X = sm.add_constant(X)
+        lm = sm.OLS(y.values, X)
         self.model = lm.fit()
         self.in_values = self.model.fittedvalues
 
@@ -31,7 +33,7 @@ class LinearRegression(Model):
         Parameters
         ----------
         X {pd.DataFrame or pd.Series}
-            Training data.
+            The input samples.
         """
         if not isinstance(X, (pd.DataFrame, pd.Series)):
             raise TypeError("X must be a pandas DataFrame or Series.")
@@ -42,17 +44,17 @@ class LinearRegression(Model):
         X = sm.add_constant(X, has_constant="add")
         self.out_values = self.model.predict(X)
 
-        first_date = self.index.min()
-        periods = self.endog.shape[0] + X.shape[0]
-        freq = pd.infer_freq(self.endog.date)
-        self.dates = pd.date_range(
+        first_date = self.dates.min()
+        periods = self.in_values.shape[0] + X.shape[0]
+        freq = pd.infer_freq(self.dates)
+        dates = pd.date_range(
             start=first_date, periods=periods, freq=freq
         )
 
         self.predicted_df = pd.DataFrame(
             {
-                "date": self.dates,
-                "obs": self.endog,
+                "date": dates,
+                "obs": np.append(self.endog, [np.nan]*X.shape[0]),
                 "pred": np.concatenate([self.in_values, self.out_values])
             }
         )
