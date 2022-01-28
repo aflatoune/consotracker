@@ -1,15 +1,17 @@
 import pandas as pd
 import numpy as np
-import statsmodels.api as sm
+from sklearn.linear_model import ElasticNet
 from consotracker.models import Model
 
 
-class LinearRegression(Model):
-    """Class for linear model
+class PenalizedRegression(Model):
+    """Class for penalized regressions (Lasso, Ridge, Elastic-Net)
     """
 
-    def __init__(self, params=None):
-        super().__init__(params)
+    def __init__(self, **params):
+        d = params
+        super().__init__(d)
+        self.model = ElasticNet(d)
 
     def fit(self, X, y):
         """
@@ -23,10 +25,8 @@ class LinearRegression(Model):
         """
         self.dates = X.index
         self.endog = y.values.flatten()
-        X = sm.add_constant(X)
-        lm = sm.OLS(y.values, X)
-        self.model = lm.fit()
-        self.in_values = self.model.fittedvalues
+        self.model = self.model.fit(X, y)
+        self.in_values = self.model.predict(X)
 
     def predict(self, X):
         """
@@ -41,7 +41,6 @@ class LinearRegression(Model):
         if isinstance(X, pd.Series):
             X = X.values.reshape(1, -1)
 
-        X = sm.add_constant(X, has_constant="add")
         self.out_values = self.model.predict(X)
 
         first_date = self.dates.min()
@@ -60,5 +59,5 @@ class LinearRegression(Model):
         )
         return self.out_values
 
-        def __str__(self):
-            return "Linear regression"
+    def __str__(self):
+        return "Penalized regression"
