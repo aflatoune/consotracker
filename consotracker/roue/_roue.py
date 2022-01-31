@@ -17,7 +17,7 @@ class ROUE():
                  scoring="neg_mean_absolute_error",
                  n_splits=None,
                  forecast_window=None,
-                 refit = False,
+                 refit=False,
                  verbose=0):
         """
         Parameters
@@ -29,8 +29,8 @@ class ROUE():
             Dictionary with parameters names as keys and lists of paramater
 
         scoring {str} -- (default: {"neg_mean_absolute_error"})
-            Strategy to evaluate the performance of the cross-validated model on the
-            test set.
+            Strategy to evaluate the performance of the cross-validated model
+            on the test set.
 
         n_splits {int} -- (default: {None})
             Number of splits.
@@ -112,7 +112,7 @@ class ROUE():
             pred = pd.DataFrame(pred, columns=["pred"])
             self.predicted_df = pd.concat(
                 [y.rename(columns={y.columns[0]: "obs"}), pred], axis=1
-                )
+            )
 
     def plot(self, date=None):
         """
