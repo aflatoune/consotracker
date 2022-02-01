@@ -11,7 +11,7 @@ class PenalizedRegression(Model):
     def __init__(self, **params):
         d = params
         super().__init__(d)
-        self.model = ElasticNet(d)
+        self.model = ElasticNet(**d)
 
     def fit(self, X, y):
         """

@@ -3,7 +3,7 @@ from statsmodels.tsa.seasonal import STL
 
 
 class Processing:
-    '''Class for Google Trends interest over time processing
+    '''Class for processing Google Trends interest over time.
     '''
 
     def __init__(
@@ -68,8 +68,6 @@ class Processing:
             X = self._to_growth_rate(X)
         if self.lag_order != 0:
             X = self._add_lag(X, order=self.lag_order)
-
-        X = X.reset_index()
         return X
 
     def _growth_wrt_date(self, X, date):

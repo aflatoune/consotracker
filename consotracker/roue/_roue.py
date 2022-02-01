@@ -9,6 +9,7 @@ from sklearn.model_selection import TimeSeriesSplit, GridSearchCV
 
 class ROUE():
     """Class implementing rolling-origin-update evaluation (ROUE).
+    Relies on sklearn TimeSeriesSplit and GridSearchCV classes.
     """
 
     def __init__(self,
@@ -23,7 +24,7 @@ class ROUE():
         Parameters
         ----------
         model {object}
-            A regression model compatible with GridSearchCV().
+            A regression model compatible with GridSearchCV.
 
         params {dict}
             Dictionary with parameters names as keys and lists of paramater

@@ -11,7 +11,7 @@ class RandomForest(Model):
     def __init__(self, **params):
         d = params
         super().__init__(d)
-        self.model = RandomForestRegressor(d)
+        self.model = RandomForestRegressor(**d)
 
     def fit(self, X, y):
         """
