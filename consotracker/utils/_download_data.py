@@ -76,6 +76,10 @@ def download_gtrends(dict_kw, timeframe="all", geo="FR"):
 def download_dbseries(dict_dbcodes):
     dict_series = {}
     for sect, series_code in dict_dbcodes.items():
-        dict_series[sect] = fetch_series(
-            'INSEE', 'CONSO-MENAGES-2014', series_code)
+        try:
+            dict_series[sect] = fetch_series(
+                'INSEE', 'CONSO-MENAGES-2014', series_code)
+        except ValueError:
+            lg.warning(f'Download failed for {series_code}.')
+
     return dict_series
