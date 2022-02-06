@@ -73,7 +73,14 @@ def download_gtrends(dict_kw, timeframe="all", geo="FR"):
     return dict_dfs
 
 
-def download_dbseries(dict_dbcodes):
+def download_dbseries(dict_dbcodes, start="2004-01-01"):
+    """Download consumption series
+
+    Parameters
+    ----------
+    start {str} -- (default: {"2004-01-01"})
+        Indicates the begining of the series (must be in YYYY/MM/DD format).
+    """
     dict_series = {}
     for sect, series_code in dict_dbcodes.items():
         try:
@@ -81,5 +88,11 @@ def download_dbseries(dict_dbcodes):
                 'INSEE', 'CONSO-MENAGES-2014', series_code)
         except ValueError:
             lg.warning(f'Download failed for {series_code}.')
+
+    for sect, df in dict_series.items():
+        if start is not None:
+            dict_series[sect] = df[df["period"] > start]["original_value"]
+        else:
+            dict_series[sect] = df["original_value"]
 
     return dict_series
