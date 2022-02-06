@@ -78,11 +78,6 @@ class ROUE():
         y {pd.DataFrame}
             Target relative to X.
         """
-        if "date" in y.columns:
-            y = y.drop(["date"], axis=1)
-        if "date" in X.columns:
-            X = X.drop(["date"], axis=1)
-
         tscv = TimeSeriesSplit(n_splits=self.n_splits, test_size=1)
         self.gridcv = GridSearchCV(estimator=self.model,
                                    cv=tscv,

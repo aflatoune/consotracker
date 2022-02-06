@@ -60,5 +60,5 @@ class LinearRegression(Model):
         )
         return self.out_values
 
-        def __str__(self):
-            return "Linear regression"
+    def __str__(self):
+        return "Linear regression"
