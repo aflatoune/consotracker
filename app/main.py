@@ -44,6 +44,8 @@ class Web:
                                        "About": None})
         st.header('Consotracker')
 
+
+
     def hide_tag(self):
         hide_streamlit_style = """
         <style>
@@ -71,6 +73,14 @@ def plot_alt(d):
         ).interactive()
     st.altair_chart(c, use_container_width=True)
 
+
+def add_metrics(mae, mse, mda):
+    _, col2, col3, col4, _ = st.columns(5)
+    col2.metric("MAE", mae)
+    col3.metric("MSE", mse)
+    col4.metric("MDA", mda)
+
+
 if __name__ == '__main__':
     st_web = Web()
     st_web.set_config()
@@ -79,6 +89,6 @@ if __name__ == '__main__':
     predicted_df = lm_model.predicted_df
 
     date = datetime.date(2019, 1, 1)
-    d = st.date_input("Date de début", predicted_df.date.min())
-    st.write('La date de départ est :', d)
+    d = st.sidebar.date_input("Date de début", predicted_df.date.min())
     plot_alt(d)
+    add_metrics(10, 20, 1)
