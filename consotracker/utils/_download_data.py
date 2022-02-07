@@ -91,7 +91,7 @@ def download_dbseries(dict_dbcodes, start="2004-01-01"):
 
     for sect, df in dict_series.items():
         if start is not None:
-            dict_series[sect] = df[df["period"] > start]["original_value"]
+            dict_series[sect] = df[df["period"] >= start]["original_value"]
         else:
             dict_series[sect] = df["original_value"]
 
