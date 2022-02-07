@@ -9,6 +9,7 @@ import pandas as pd
 
 alt.renderers.set_embed_options(actions=False)
 
+
 def create_serie():
     dict_kw = read_kw_from_csv("./gtrends_test.csv")
     dict_dbcodes = read_dbcode_from_csv("./series_test.csv")
@@ -44,8 +45,6 @@ class Web:
                                        "About": None})
         st.header('Consotracker')
 
-
-
     def hide_tag(self):
         hide_streamlit_style = """
         <style>
@@ -66,11 +65,12 @@ def plot_alt(d):
     mask_df = predicted_df[predicted_df.date >= pd.to_datetime(d)]
     melted_df = mask_df.melt('date', var_name='type', value_name='value')
     domain = [melted_df.value.min(), melted_df.value.max()]
-    alt.Chart(melted_df).mark_line().encode(
+    c = alt.Chart(melted_df).mark_line().encode(
         alt.X('date:T'),
         alt.Y('value:Q', scale=alt.Scale(domain=domain)),
         alt.Color('type:N')
-)
+    ).interactive()
+    st.altair_chart(c, use_container_width=True)
 
 
 def add_metrics(mae, mse, mda):
@@ -87,7 +87,9 @@ if __name__ == '__main__':
     fig, lm_model = create_serie()
     predicted_df = lm_model.predicted_df
 
-    date = datetime.date(2019, 1, 1)
-    d = st.sidebar.date_input("Date de début", predicted_df.date.min())
+    d = st.sidebar.date_input("Date de début",
+                              value=predicted_df.date.min().date(),
+                              min_value=predicted_df.date.min().date(),
+                              max_value=predicted_df.date.max().date())
     plot_alt(d)
     add_metrics(10, 20, 1)
