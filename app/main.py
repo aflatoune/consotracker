@@ -63,15 +63,14 @@ class Web:
 
 
 def plot_alt(d):
-    mask = predicted_df.date >= pd.to_datetime(d)
-    base = alt.Chart(predicted_df[mask]).encode(x='date')
-    c = alt.layer(
-        base.mark_line(color='blue').encode(
-            alt.Y('obs', title = '', scale=alt.Scale(domain=[12, 18]))),
-        base.mark_line(color='red').encode(
-            alt.Y('pred', title = '', scale=alt.Scale(domain=[12, 18])))
-        ).interactive()
-    st.altair_chart(c, use_container_width=True)
+    mask_df = predicted_df[predicted_df.date >= pd.to_datetime(d)]
+    melted_df = mask_df.melt('date', var_name='type', value_name='value')
+    domain = [melted_df.value.min(), melted_df.value.max()]
+    alt.Chart(melted_df).mark_line().encode(
+        alt.X('date:T'),
+        alt.Y('value:Q', scale=alt.Scale(domain=domain)),
+        alt.Color('type:N')
+)
 
 
 def add_metrics(mae, mse, mda):
