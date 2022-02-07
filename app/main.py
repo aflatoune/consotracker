@@ -17,17 +17,16 @@ def create_serie():
     dict_series = download_dbseries(dict_dbcodes)
 
     X = dict_dfs["FZ"]
-    y = dict_series["FZ"]["original_value"]
-    y = y[-217:]
+    y = dict_series["FZ"]
     processor = Processing()
     X = processor.fit(X)
-    X_train = X.iloc[:-1, :]
-    X_test = X.iloc[-1, :]
+    X_train = X.iloc[:216, :]
+    X_test = X.iloc[217, :]
 
     lm_model = LinearRegression()
     lm_model.fit(X_train, y)
     lm_model.predict(X_test)
-    fig, ax = lm_model.plot()
+    fig = lm_model.plot()
     return fig, lm_model
 
 
@@ -49,7 +48,6 @@ class Web:
         hide_streamlit_style = """
         <style>
         footer {visibility: hidden;}
-
         #bui-2 > div > ul.st-d6.st-cp.st-as.st-at.st-by.st-bz.st-fw.st-fx.st-bc.st-bd.st-av.st-aw.st-ax.st-ay.st-fr.st-fy.st-fz.st-g0 > ul:nth-child(6) {display: none;}
         #bui-2 > div > ul.css-1uh038d.e1pxm3bq7 > ul {display: none;}
         </style>
@@ -78,8 +76,7 @@ def add_metrics(mae, mse, mda):
     col2.metric("MAE", mae)
     col3.metric("MSE", mse)
     col4.metric("MDA", mda)
-
-
+    
 if __name__ == '__main__':
     st_web = Web()
     st_web.set_config()
