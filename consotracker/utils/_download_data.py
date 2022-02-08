@@ -39,17 +39,18 @@ def read_dbcode_from_csv(csvfile,
 
     Returns
     -------
-    A dict with cnat_code (french sectors codes) as keys and pandas
-    DataFrames (containing keywords, categories and labels) as values.
+    A dict with cnat_code (french sectors codes) as keys and codes to download
+    series as values.
     """
     dict_dbcodes = {}
-    reader = DictReader(open(csvfile), delimiter=sep, fieldnames=["k", "v"])
+    reader = DictReader(open(csvfile, encoding=encoding), delimiter=sep,
+                        fieldnames=["k", "v1", "v2"])
 
     if skip_first_row:
         headers = next(reader)
 
     for row in reader:
-        dict_dbcodes.update({row["k"]: row["v"]})
+        dict_dbcodes.update({row["k"]: [row["v1"], row["v2"]]})
     return dict_dbcodes
 
 
@@ -73,9 +74,28 @@ def download_gtrends(dict_kw, timeframe="all", geo="FR"):
     return dict_dfs
 
 
-def download_dbseries(dict_dbcodes):
+def download_dbseries(dict_dbcodes, start="2004-01-01"):
+    """Download economic series
+
+    Parameters
+    ----------
+    start {str} -- (default: {"2004-01-01"})
+        Indicates the begining of the series (must be in YYYY/MM/DD format).
+    """
     dict_series = {}
-    for sect, series_code in dict_dbcodes.items():
-        dict_series[sect] = fetch_series(
-            'INSEE', 'CONSO-MENAGES-2014', series_code)
+    for sect, codes in dict_dbcodes.items():
+        dataset_code = codes[0]
+        series_code = codes[1]
+        try:
+            dict_series[sect] = fetch_series(
+                'INSEE', dataset_code, series_code)
+        except ValueError:
+            lg.warning(f'Download failed for {dataset_code}/{series_code}.')
+
+    for sect, df in dict_series.items():
+        if start is not None:
+            dict_series[sect] = df[df["period"] >= start]["original_value"]
+        else:
+            dict_series[sect] = df["original_value"]
+
     return dict_series
