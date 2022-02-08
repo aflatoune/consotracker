@@ -1,4 +1,3 @@
-from random import random
 import pytest
 from sklearn.ensemble import RandomForestRegressor
 from consotracker.roue import ROUE
