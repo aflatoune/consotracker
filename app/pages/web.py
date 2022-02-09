@@ -4,6 +4,7 @@ class Web:
     def __init__(self, kwargs=None):
         self.kwargs = kwargs if isinstance(kwargs, dict) else {}
         self.title = self.kwargs.get('page_title', 'ConsoTracker')
+        self.set_config()
         if self.kwargs.get('hide_tag', True):
             self.hide_tag()
         if self.kwargs.get('hide_dev_menu', False):
@@ -13,7 +14,7 @@ class Web:
         st.set_page_config(page_title=self.title,
                            page_icon=None,
                            layout='wide',
-                           initial_sidebar_state='collapsed',
+                           initial_sidebar_state='expanded',
                            menu_items={"Get help": None,
                                        "Report a Bug": None,
                                        "About": None})
@@ -36,6 +37,13 @@ class Web:
         </style>
         """
         st.markdown(hide_menu_style, unsafe_allow_html=True)
+
+    def v_spacer(self, height, sb=False) -> None:
+        for _ in range(height):
+            if sb:
+                st.sidebar.write('\n')
+            else:
+                st.write('\n')
 
     def __str__(self):
         str(self.kwargs)

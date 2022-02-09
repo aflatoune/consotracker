@@ -7,24 +7,26 @@ def _check_length(*arrays):
         raise ValueError("Arrays do not have the same number of samples.")
 
 
-def mae(obs, pred):
+def mae(obs, pred, round_value=3):
     """Mean Absolute (Forecast) Error
     """
     _check_length(obs, pred)
-    return np.mean(np.absolute(pred - obs), axis=0)
+    mae_value = np.mean(np.absolute(pred - obs), axis=0)
+    return np.round(mae_value, round_value)
 
 
-def rmse(obs, pred):
+def rmse(obs, pred, round_value=3):
     """Root Mean Square (Forecast) Error
     """
     _check_length(obs, pred)
-    return np.sqrt(np.mean((pred - obs)**2, axis=0))
+    rmse_value = np.sqrt(np.mean((pred - obs)**2, axis=0))
+    return np.round(rmse_value, round_value)
 
-
-def mda(obs, pred):
+def mda(obs, pred, round_value=3):
     """Mean Directional Accuracy
     """
     _check_length(obs, pred)
     obs_diff = np.sign(obs[1:] - obs[:-1])
     pred_diff = np.sign(pred[1:] - pred[:-1])
-    return np.mean(obs_diff == pred_diff, axis=0)
+    mda_value = np.mean(obs_diff == pred_diff, axis=0)
+    return np.round(mda_value, round_value)
