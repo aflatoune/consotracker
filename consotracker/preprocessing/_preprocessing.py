@@ -1,3 +1,4 @@
+import logging as lg
 import pandas as pd
 from statsmodels.tsa.seasonal import STL
 
@@ -68,11 +69,19 @@ class Processing:
             X = self._to_growth_rate(X)
         if self.lag_order != 0:
             X = self._add_lag(X, order=self.lag_order)
+
+        lg.info(f'Processed X has {X.shape[0]} rows and {X.shape[1]} columns')
         return X
 
     def _growth_wrt_date(self, X, date):
-        X = X.apply(lambda x: (x/x[date] - 1)*100)
-        return X
+        def inner_growth(x, date=date):
+            if x[date] == 0:
+                msg = (f'{date} value in {x.name} is equal to 0, this will '
+                       f'generate nan infinite values. You should replace the '
+                       f'value by 1, change reference date or drop the column')
+                lg.warning(msg)
+            return (x/x[date] - 1)*100
+        return X.apply(inner_growth)
 
     def _deseasonalize(self, X, method):
         if method == 'stl':
@@ -81,9 +90,9 @@ class Processing:
             return res.trend
         elif method == 'yoy':
             if pd.infer_freq(X.index) in ['M', 'MS']:
-                return X.diff(12)
+                return X.diff(12).dropna()
             elif pd.infer_freq(X.index) in ['W']:
-                return X.diff(52)
+                return X.diff(52).dropna()
 
     def _to_growth_rate(self, X):
         X = (X/X.shift(1) - 1)*100
