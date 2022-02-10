@@ -55,7 +55,7 @@ class Model(ABC):
         ax.set_ylabel(ylabel)
         ax.margins(x=0)
         fig.autofmt_xdate(rotation=90)
-        plt.title(title)
-        plt.legend(["obs", "pred"], bbox_to_anchor=[0.5, 0],
+        ax.set_title(title)
+        ax.legend(["obs", "pred"], bbox_to_anchor=[0.5, 0],
                    loc="lower center", ncol=2)
-        return ax
+        return (fig, ax)

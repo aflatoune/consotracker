@@ -18,6 +18,7 @@ class ROUE():
                  scoring="neg_mean_absolute_error",
                  n_splits=None,
                  forecast_window=None,
+                 test_size=1,
                  refit=False,
                  verbose=0):
         """
@@ -27,7 +28,7 @@ class ROUE():
             A regression model compatible with GridSearchCV.
 
         params {dict}
-            Dictionary with parameters names as keys and lists of paramater
+            Dictionary with parameters names as keys and lists of paramaters.
 
         scoring {str} -- (default: {"neg_mean_absolute_error"})
             Strategy to evaluate the performance of the cross-validated model
@@ -41,8 +42,11 @@ class ROUE():
             to be observed when training `model` for the first time, the 2nd one
             indicates the last date for which an out-of-sample prediction is
             computed. Concretely, a oot prediction is made for all dates such
-            that forecast_window[1] < date =< forecast_window[2] (must be in
+            that forecast_window[0] < date =< forecast_window[1] (must be in
             YYYY/MM/DD format).
+
+        test_size {int} -- (default: {1})
+            Size of the rolling test set.
 
         refit {bool} -- (default: {False})
             Refit the best estimator on the rolling train/test indexes to get
@@ -53,18 +57,19 @@ class ROUE():
                              "must be specified.")
 
         if n_splits is None:
-            lg.warning("As n_splits is not specified, its value is deduced",
-                       "from forecast_window assuming that data are at a",
-                       "monthly freq. This can be misleading if you\'re",
+            lg.warning("As n_splits is not specified, its value is deduced "
+                       "from forecast_window assuming that data are at a "
+                       "monthly freq. This can be misleading if you\'re "
                        "not working with monthly data")
-            self.n_splits = ROUE.month_diff(self.forecast_window[1],
-                                            self.forecast_window[2])
+            n_splits = ROUE.month_diff(forecast_window[0],
+                                       forecast_window[1])
 
         self.model = model
         self.param_grid = param_grid
         self.scoring = scoring
         self.forecast_window = forecast_window
         self.n_splits = n_splits
+        self.test_size = test_size
         self.refit = refit
         self.verbose = verbose
 
@@ -78,7 +83,8 @@ class ROUE():
         y {pd.DataFrame}
             Target relative to X.
         """
-        tscv = TimeSeriesSplit(n_splits=self.n_splits, test_size=1)
+        tscv = TimeSeriesSplit(n_splits=self.n_splits,
+                               test_size=self.test_size)
         self.gridcv = GridSearchCV(estimator=self.model,
                                    cv=tscv,
                                    scoring=self.scoring,
