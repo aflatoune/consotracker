@@ -44,13 +44,13 @@ def read_dbcode_from_csv(csvfile,
     """
     dict_dbcodes = {}
     reader = DictReader(open(csvfile, encoding=encoding), delimiter=sep,
-                        fieldnames=["k", "v1", "v2"])
+                        fieldnames=["k", "v1", "v2", "v3"])
 
     if skip_first_row:
         headers = next(reader)
 
     for row in reader:
-        dict_dbcodes.update({row["k"]: [row["v1"], row["v2"]]})
+        dict_dbcodes.update({row["k"]: [row["v1"], row["v2"], row["v3"]]})
     return dict_dbcodes
 
 
