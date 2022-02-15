@@ -9,16 +9,19 @@ import pandas as pd
 
 alt.renderers.set_embed_options(actions=False)
 
+
 class Serie:
     def __init__(self):
         pass
 
-    def create_serie(self, model, choice):
+    def get_data(self):
         dict_kw = read_kw_from_csv("./gtrends_test.csv")
         dict_dbcodes = read_dbcode_from_csv("./series_test.csv")
         dict_dfs = download_gtrends(dict_kw)
         dict_series = download_dbseries(dict_dbcodes)
+        return dict_dfs, dict_series
 
+    def create_serie(self, dict_dfs, dict_series, model, choice):
         X = dict_dfs[choice]
         y = dict_series[choice]
         processor = Processing()
@@ -34,7 +37,8 @@ class Serie:
 
     def plot_alt(self, date, df, box):
         d_init, d_last = date
-        mask_df = df[(df.date >= pd.to_datetime(d_init)) & (df.date <= pd.to_datetime(d_last))]
+        mask_df = df[(df.date >= pd.to_datetime(d_init)) &
+                     (df.date <= pd.to_datetime(d_last))]
         melted_df = mask_df.melt('date', var_name='type', value_name='value')
         domain = [melted_df.value.min(), melted_df.value.max()]
         c = alt.Chart(melted_df).mark_line().encode(
@@ -44,14 +48,40 @@ class Serie:
         ).interactive()
         box.altair_chart(c, use_container_width=True)
 
-    def add_metrics(self, date, df, box):
-        d_init, d_last = date
-        mask_df = df[(df.date >= pd.to_datetime(d_init)) & (df.date <= pd.to_datetime(d_last))]
-        data_select = mask_df.dropna()
-        _, col2, col3, col4, _ = box.columns(5)
-        col2.metric("MAE", mae(obs=data_select.obs, pred=data_select.pred, round_value=3))
-        col3.metric("RMSE", rmse(obs=data_select.obs, pred=data_select.pred, round_value=3))
-        col4.metric("MDA", mda(obs=data_select.obs, pred=data_select.pred, round_value=3))
+    def plot_alt2(self, df, box):
+        melted_df = df.melt('date', var_name='type', value_name='value')
+        domain = [melted_df.value.min(), melted_df.value.max()]
+
+        nearest = alt.selection(type='single', nearest=True, on='mouseover',
+                                fields=['date'], empty='none')
+
+        c = alt.Chart(melted_df).mark_line().encode(
+            alt.X('yearmonth(date):T', title=""),
+            alt.Y('value:Q', scale=alt.Scale(domain=domain), title=""),
+            alt.Color('type:N')
+        )
+
+        selectors = alt.Chart(melted_df).mark_point().encode(
+            x='yearmonth(date):T', opacity=alt.value(0),).add_selection(nearest)
+        points = c.mark_point().encode(
+            opacity=alt.condition(nearest, alt.value(1), alt.value(0)))
+        text = c.mark_text(align='left', dx=5, dy=-5).encode(
+            text=alt.condition(nearest, 'value:Q', alt.value(' ')))
+        rules = alt.Chart(melted_df).mark_rule(color='gray').encode(
+            x='yearmonth(date):T',).transform_filter(nearest)
+        layers = alt.layer(c, selectors, points, rules,
+                           text).properties(width=600, height=300)
+        box.altair_chart(layers, use_container_width=True)
+
+    def add_metrics(self, df, box):
+        data_select = df.dropna()
+        metric1 = mae(obs=data_select.obs,
+                      pred=data_select.pred, round_value=3)
+        metric2 = rmse(obs=data_select.obs,
+                       pred=data_select.pred, round_value=3)
+        metric3 = mda(obs=data_select.obs,
+                      pred=data_select.pred, round_value=3)
+        st.write("MAE:", metric1, " RMSE: ", metric2, " MDA: ", metric3)
 
 
 class SideBar:
