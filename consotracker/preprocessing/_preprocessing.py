@@ -76,9 +76,9 @@ class Processing:
     def _growth_wrt_date(self, X, date):
         def inner_growth(x, date=date):
             if x[date] == 0:
-                msg = (f'{date} value in {x.name} is equal to 0, this will '
-                       f'generate nan infinite values. You should replace the '
-                       f'value by 1, change reference date or drop the column')
+                x[date] = 1
+                msg = (f'{date} value in {x.name} is equal to 0. The value has '
+                       f'been set to 1 to avoid nan and infinite values')
                 lg.warning(msg)
             return (x/x[date] - 1)*100
         return X.apply(inner_growth)
