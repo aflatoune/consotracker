@@ -1,4 +1,4 @@
-from pkgutil import get_data
+import logging as lg
 import streamlit as st
 from pages.serie import Serie
 from pages.web import Web
