@@ -1,6 +1,5 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from pandas.api.types import is_datetime64_any_dtype as is_datetime
 from abc import ABC, abstractmethod
 
 
