@@ -3,7 +3,7 @@ from consotracker.models import LinearRegression, PenalizedRegression, RandomFor
 from consotracker.preprocessing import Processing
 from consotracker.utils import (download_dbseries, download_gtrends,
                                 read_dbcode_from_csv, read_kw_from_csv,
-                                mae, mda, rmse)
+                                match_dict, mae, mda, rmse)
 import altair as alt
 import pandas as pd
 
@@ -15,8 +15,9 @@ class Serie:
         pass
 
     def get_data(self):
-        dict_kw = read_kw_from_csv("./gtrends_test.csv")
-        dict_dbcodes = read_dbcode_from_csv("./series_test.csv")
+        dict_kw = read_kw_from_csv("./gtrends.csv")
+        dict_dbcodes = read_dbcode_from_csv("./dbnomics.csv")
+        match_dict(dict_kw, dict_dbcodes)
         dict_dfs = download_gtrends(dict_kw)
         dict_series = download_dbseries(dict_dbcodes)
         return dict_dfs, dict_series

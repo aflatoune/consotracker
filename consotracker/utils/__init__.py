@@ -6,6 +6,7 @@ __all__ = [
     "read_dbcode_from_csv",
     "download_gtrends",
     "download_dbseries",
+    "match_dict",
     "mae",
     "rmse",
     "mda"

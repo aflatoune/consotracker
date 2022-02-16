@@ -99,3 +99,25 @@ def download_dbseries(dict_dbcodes, start="2004-01-01"):
             dict_series[sect] = df["original_value"]
 
     return dict_series
+
+def match_dict(d1, d2):
+    """Filter two dictionnaries by keeping only common keys.
+
+    Parameters
+    ----------
+    d1 {dict}
+
+    d2 {dict}
+
+    Returns
+    -------
+    Common keys between the dicitonnaries.
+    """
+    common_k = d1.keys() & d2.keys()
+    for k1 in d1.copy().keys():
+        if k1 not in common_k:
+            d1.pop(k1)
+    for k2 in d2.copy().keys():
+        if k2 not in common_k:
+            d2.pop(k2)
+    return common_k
