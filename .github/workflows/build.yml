@@ -3,7 +3,7 @@ name: Continious integration (CI)
 on:
   workflow_call:
     secrets:
-      GITHUB_TOKEN:
+      TOKEN:
         required: true
       NAME_OWNER:
         required: true
