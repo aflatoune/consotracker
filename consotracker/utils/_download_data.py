@@ -37,14 +37,13 @@ def download_dbseries(dict_dbcodes, start="2004-01-01"):
     """
     dict_series = {}
     for sect, subdict in dict_dbcodes.items():
-        for subsubdict in subdict.values():
-            dataset_code = subsubdict["dataset_code"]
-            serie_code = subsubdict["serie_code"]
-            try:
-                dict_series[sect] = fetch_series(
-                    'INSEE', dataset_code, serie_code)
-            except ValueError:
-                lg.warning(f'Download failed for {dataset_code}/{serie_code}.')
+        dataset_code = subdict["dataset_code"]
+        serie_code = subdict["serie_code"]
+        try:
+            dict_series[sect] = fetch_series(
+                'INSEE', dataset_code, serie_code)
+        except ValueError:
+            lg.warning(f'Download failed for {dataset_code}/{serie_code}.')
 
     for sect, df in dict_series.items():
         if start is not None:
@@ -53,6 +52,7 @@ def download_dbseries(dict_dbcodes, start="2004-01-01"):
             dict_series[sect] = df["original_value"]
 
     return dict_series
+
 
 def match_dict(d1, d2):
     """Filter two dictionnaries by keeping only common keys.
