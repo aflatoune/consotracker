@@ -1,4 +1,5 @@
 dbnomics==1.2.2
+json5==0.9.5
 numpy==1.21
 pandas==1.3.4
 pytrends==4.7.3
