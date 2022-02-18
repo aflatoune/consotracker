@@ -2,7 +2,6 @@ import streamlit as st
 from consotracker.models import LinearRegression, PenalizedRegression, RandomForest
 from consotracker.preprocessing import Processing
 from consotracker.utils import (download_dbseries, download_gtrends,
-                                read_dbcode_from_csv, read_kw_from_csv,
                                 match_dict, mae, mda, rmse)
 import altair as alt
 import pandas as pd
