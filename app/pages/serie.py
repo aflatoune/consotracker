@@ -13,9 +13,7 @@ class Serie:
     def __init__(self):
         pass
 
-    def get_data(self):
-        dict_kw = read_kw_from_csv("./gtrends.csv")
-        dict_dbcodes = read_dbcode_from_csv("./dbnomics.csv")
+    def dl_data(self, dict_kw, dict_dbcodes):
         match_dict(dict_kw, dict_dbcodes)
         dict_dfs = download_gtrends(dict_kw)
         dict_series = download_dbseries(dict_dbcodes)

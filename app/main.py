@@ -1,3 +1,4 @@
+import json
 import logging as lg
 import streamlit as st
 from pages.serie import Serie
@@ -15,8 +16,13 @@ if __name__ == '__main__':
     st_serie = Serie()
     model_name = st.sidebar.selectbox(
         "Modèle", list(DICT_MODELS.keys()), index=0)
-    dict_dfs, dict_series = st_serie.get_data()
-    sector_list = dict_series.keys()
+
+    gtrends = open("gtrends.json")
+    dbnomics = open("dbnomics.json")
+    dict_kw = json.load(gtrends)
+    dict_dbcodes = json.load(dbnomics)
+    sector_list = dict_dbcodes.keys()
+    dict_dfs, dict_series = st_serie.dl_data(dict_kw, dict_dbcodes)
 
     cols = st.columns(len(sector_list))
     for col, sector in zip(cols, sector_list):
