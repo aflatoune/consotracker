@@ -46,6 +46,7 @@ def download_dbseries(dict_dbcodes, start="2004-01-01"):
             lg.warning(f'Download failed for {dataset_code}/{serie_code}.')
 
     for sect, df in dict_series.items():
+        df.set_index("period", drop=False, inplace=True)
         if start is not None:
             dict_series[sect] = df[df["period"] >= start]["original_value"]
         else:
