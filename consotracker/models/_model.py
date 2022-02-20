@@ -1,4 +1,6 @@
+import logging as lg
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 from abc import ABC, abstractmethod
 
@@ -56,5 +58,14 @@ class Model(ABC):
         fig.autofmt_xdate(rotation=90)
         ax.set_title(title)
         ax.legend(["obs", "pred"], bbox_to_anchor=[0.5, 0],
-                   loc="lower center", ncol=2)
+                  loc="lower center", ncol=2)
         return (fig, ax)
+
+    def _check_data(*arrays):
+        if not all(isinstance(array.index, pd.DatetimeIndex) for array in arrays):
+            raise TypeError("Data must have a DatetimeIndex.")
+        dates = np.array([array.index.min() for array in arrays])
+        if len(np.unique(dates)) != 1:
+            lg.warning("Arrays have been modified so that they all have the "
+                       "same starting date.")
+            return tuple(array[array.index >= dates.max()] for array in arrays)

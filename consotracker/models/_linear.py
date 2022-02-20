@@ -21,6 +21,7 @@ class LinearRegression(Model):
         y {pd.DataFrame}
             Target relative to X.
         """
+        self._check_data(X, y)
         self.dates = X.index
         self.endog = y.values.flatten()
         X = sm.add_constant(X)

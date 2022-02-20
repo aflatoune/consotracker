@@ -23,6 +23,7 @@ class PenalizedRegression(Model):
         y {pd.DataFrame}
             Target relative to X.
         """
+        self._check_data(X, y)
         self.dates = X.index
         self.endog = y.values.flatten()
         self.model = self.model.fit(X, y)
