@@ -17,10 +17,10 @@ if __name__ == '__main__':
     model_name = st.sidebar.selectbox(
         "Modèle", list(DICT_MODELS.keys()), index=0)
 
-    gtrends = open("gtrends.json")
-    dbnomics = open("dbnomics.json")
-    dict_kw = json.load(gtrends)
-    dict_dbcodes = json.load(dbnomics)
+    with open("app/configs/gtrends.json") as f1, open ("app/configs/dbnomics.json") as f2:
+        dict_kw = json.load(f1)
+        dict_dbcodes = json.load(f2)
+
     sector_list = dict_dbcodes.keys()
     dict_dfs, dict_series = st_serie.dl_data(dict_kw, dict_dbcodes)
 
