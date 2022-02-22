@@ -5,6 +5,7 @@ from pages.serie import Serie
 from pages.web import Web
 
 from consotracker.models import LinearRegression, PenalizedRegression, RandomForest
+from consotracker.utils import match_dict
 
 DICT_MODELS = {'LinearRegression': LinearRegression,
                'PenalizedRegression': PenalizedRegression,
@@ -21,7 +22,7 @@ if __name__ == '__main__':
         dict_kw = json.load(f1)
         dict_dbcodes = json.load(f2)
 
-    sector_list = dict_dbcodes.keys()
+    sector_list = match_dict(dict_kw, dict_dbcodes)
     dict_dfs, dict_series = st_serie.dl_data(dict_kw, dict_dbcodes)
 
     cols = st.columns(len(sector_list))
