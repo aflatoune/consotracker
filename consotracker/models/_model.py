@@ -61,7 +61,7 @@ class Model(ABC):
                   loc="lower center", ncol=2)
         return (fig, ax)
 
-    def _check_data(*arrays):
+    def _check_data(self, *arrays):
         if not all(isinstance(array.index, pd.DatetimeIndex) for array in arrays):
             raise TypeError("Data must have a DatetimeIndex.")
         dates = np.array([array.index.min() for array in arrays])
