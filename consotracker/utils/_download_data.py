@@ -19,11 +19,9 @@ def download_gtrends(dict_kw, timeframe="all", geo="FR"):
                 )
                 gtrends = pytrends.interest_over_time()
                 l.append(gtrends)
-                dict_dfs[sect] = pd.concat(l, axis=1).drop(
-                    labels=["isPartial"], axis=1
-                )
             except ResponseError:
                 lg.warning(f"Download failed for {kw}. Check your keyword.")
+        dict_dfs[sect] = pd.concat(l, axis=1).drop(labels=["isPartial"], axis=1)
     return dict_dfs
 
 
