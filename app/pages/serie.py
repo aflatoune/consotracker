@@ -24,8 +24,10 @@ class Serie:
         y = dict_series[choice]
         processor = Processing()
         X = processor.fit(X)
-        X_train = X.iloc[:216, :]
-        X_test = X.iloc[217, :]
+
+        sup_date = y.index.max()
+        X_train = X[X.index < sup_date]
+        X_test = X.iloc[sup_date]
 
         lm_model = model()
         lm_model.fit(X_train, y)

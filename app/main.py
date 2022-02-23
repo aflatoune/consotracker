@@ -28,7 +28,7 @@ if __name__ == '__main__':
     cols = st.columns(len(sector_list))
     for col, sector in zip(cols, sector_list):
         with col:
-            st.subheader(f'{sector}')
+            st.subheader(f'{dict_series[sector]["label"]}')
             graph = st.empty()
             metrics = st.empty()
             st_web.v_spacer(height=0, sb=False)
