@@ -69,3 +69,5 @@ class Model(ABC):
             lg.warning("Arrays have been modified so that they all have the "
                        "same starting date.")
             return tuple(array[array.index >= dates.max()] for array in arrays)
+        else :
+            return arrays

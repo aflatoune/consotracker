@@ -26,8 +26,8 @@ class Serie:
         X = processor.fit(X)
 
         sup_date = y.index.max()
-        X_train = X[X.index < sup_date]
-        X_test = X.iloc[sup_date]
+        X_train = X[X.index <= sup_date]
+        X_test = X.loc[sup_date]
 
         lm_model = model()
         lm_model.fit(X_train, y)
