@@ -1,10 +1,12 @@
 import streamlit as st
+import altair as alt
+import pandas as pd
+
+from dateutil.relativedelta import relativedelta
 from consotracker.models import LinearRegression, PenalizedRegression, RandomForest
 from consotracker.preprocessing import Processing
 from consotracker.utils import (download_dbseries, download_gtrends,
                                 match_dict, mae, mda, rmse)
-import altair as alt
-import pandas as pd
 
 alt.renderers.set_embed_options(actions=False)
 
@@ -26,6 +28,7 @@ class Serie:
         X = processor.fit(X)
 
         sup_date = y.index.max()
+        pred_date = sup_date + relativedelta(months=1)
         X_train = X[X.index <= sup_date]
         X_test = X.loc[sup_date]
 
