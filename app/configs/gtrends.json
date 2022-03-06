@@ -1,0 +1,372 @@
+{
+    "alim": {
+        "Supermarché": {
+            "kw": "/m/0dnkv",
+            "cat": 0
+        },
+        "Monoprix": {
+            "kw": "/m/047d2wj",
+            "cat": 0
+        },
+        "Carrefour": {
+            "kw": "/m/0bdzx6",
+            "cat": 0
+        },
+        "Lidl": {
+            "kw": "lidl",
+            "cat": 0
+        },
+        "fruit": {
+            "kw": "/m/02xwb",
+            "cat": 0
+        },
+        "légume": {
+            "kw": "/m/0f4s2w",
+            "cat": 0
+        },
+        "viande": {
+            "kw": "/m/07s11x",
+            "cat": 0
+        },
+        "boulangerie": {
+            "kw": "/m/02wv6th",
+            "cat": 0
+        },
+        "patisserie": {
+            "kw": "/m/0hnyx",
+            "cat": 0
+        },
+        "cuisine": {
+            "kw": "cuisine",
+            "cat": 0
+        },
+        "liste de courses": {
+            "kw": "/m/05b_q5",
+            "cat": 0
+        },
+        "tabac": {
+            "kw": "/g/122hzwt4",
+            "cat": 0
+        },
+        "boisson": {
+            "kw": "/g/122fpn6r",
+            "cat": 0
+        },
+        "Boisson alcoolisée": {
+            "kw": "/m/012mj",
+            "cat": 0
+        },
+        "Magasin d'alimentation": {
+            "kw": "/m/01jpn4",
+            "cat": 0
+        }
+    },
+    "energie": {
+        "Electricité": {
+            "kw": "electricité",
+            "cat": 0
+        },
+        "gaz": {
+            "kw": "gaz",
+            "cat": 0
+        },
+        "énergie": {
+            "kw": "énergie",
+            "cat": 0
+        },
+        "TotalEnergies": {
+            "kw": "/m/03d938",
+            "cat": 0
+        },
+        "Électricité de France": {
+            "kw": "/m/03y4ty",
+            "cat": 0
+        },
+        "Engie": {
+            "kw": "/m/04f7b89",
+            "cat": 0
+        },
+        "Lyonnaise des Eaux": {
+            "kw": "11byl2hh4k",
+            "cat": 0
+        },
+        "Veolia": {
+            "kw": "/m/08ynx3",
+            "cat": 0
+        },
+        "gazole": {
+            "kw": "gazole",
+            "cat": 0
+        },
+        "essence": {
+            "kw": "/m/05wy2",
+            "cat": 0
+        },
+        "Petrole": {
+            "kw": "/m/05r_j",
+            "cat": 0
+        },
+        "carburant": {
+            "kw": "/g/122jkfjh",
+            "cat": 0
+        },
+        "diesel": {
+            "kw": "/m/0l0xy",
+            "cat": 0
+        },
+        "Station-service": {
+            "kw": "/m/0gm3m",
+            "cat": 0
+        }
+    },
+    "biens_fabriques": {
+        "renault": {
+            "kw": "/m/0h5wr7c",
+            "cat": 0
+        },
+        "peugeot": {
+            "kw": "/m/0h5zkkt",
+            "cat": 0
+        },
+        "citroen": {
+            "kw": "/m/0djkl",
+            "cat": 0
+        },
+        "Véhicule d'occasion": {
+            "kw": "/m/0d4yhw",
+            "cat": 0
+        },
+        "Voiture électrique": {
+            "kw": "/m/03nlf2w",
+            "cat": 0
+        },
+        "Atelier de réparation automobile": {
+            "kw": "/m/0dgc3t",
+            "cat": 0
+        },
+        "Véhicule": {
+            "kw": "/m/07yv9",
+            "cat": 0
+        },
+        "Constructeur automobile": {
+            "kw": "/g/121v79kw",
+            "cat": 0
+        },
+        "Moto": {
+            "kw": "/m/04_sv",
+            "cat": 0
+        },
+        "Scooter": {
+            "kw": "/m/0dmq2",
+            "cat": 0
+        },
+        "Bicyclette": {
+            "kw": "/m/0199g",
+            "cat": 0
+        },
+        "La Part-Dieu": {
+            "kw": "/m/05sy8j6",
+            "cat": 0
+        },
+        "Westfield Carré Sénart": {
+            "kw": "/g/121w6pdj",
+            "cat": 0
+        },
+        "Westfield Les 4 Temps": {
+            "kw": "/g/122qmgbb",
+            "cat": 0
+        },
+        "Belle épine": {
+            "kw": "/g/1238gfdx",
+            "cat": 0
+        },
+        "Créteil Soleil": {
+            "kw": "/g/122wtgqp",
+            "cat": 0
+        },
+        "commerce": {
+            "kw": "commerces",
+            "cat": 0
+        },
+        "Vente privée": {
+            "kw": "/g/122njb2m",
+            "cat": 0
+        },
+        "Jouet": {
+            "kw": "/m/0138tl",
+            "cat": 0
+        },
+        "shopping": {
+            "kw": "shopping",
+            "cat": 0
+        },
+        "Sport": {
+            "kw": "/m/06ntj",
+            "cat": 0
+        },
+        "Équipement sportif": {
+            "kw": "/m/05y5lj",
+            "cat": 0
+        },
+        "Cuisine": {
+            "kw": "/m/0d4wf",
+            "cat": 0
+        },
+        "Meuble": {
+            "kw": "/m/0c_jw",
+            "cat": 0
+        },
+        "décoration": {
+            "kw": "/g/1224thsy",
+            "cat": 0
+        },
+        "Ordinateur": {
+            "kw": "/m/01m3v",
+            "cat": 0
+        },
+        "Téléphone": {
+            "kw": "/m/07cx4",
+            "cat": 0
+        },
+        "Électroménager": {
+            "kw": "/m/019dx1",
+            "cat": 0
+        },
+        "Jardinage": {
+            "kw": "/m/034v_",
+            "cat": 0
+        },
+        "Vêtement": {
+            "kw": "/m/09j2d",
+            "cat": 0
+        },
+        "chaussure": {
+            "kw": "/m/06rrc",
+            "cat": 0
+        },
+        "Parfum": {
+            "kw": "/g/122dkthg",
+            "cat": 0
+        },
+        "Bricolage": {
+            "kw": "/m/03yv01",
+            "cat": 0
+        },
+        "Opticien-lunetier": {
+            "kw": "/m/02ndl5",
+            "cat": 0
+        },
+        "Lunettes": {
+            "kw": "/m/0jyfg",
+            "cat": 0
+        },
+        "Bijou": {
+            "kw": "/m/0404d",
+            "cat": 0
+        },
+        "Médicament": {
+            "kw": "/m/018l35",
+            "cat": 0
+        },
+        "Livre": {
+            "kw": "/m/0bt_c3",
+            "cat": 0
+        }
+    },
+    "transports": {
+        "vol": {
+            "kw": "/m/01515d",
+            "cat": 0
+        },
+        "train": {
+            "kw": "/m/07jdr",
+            "cat": 0
+        },
+        "Bateau": {
+            "kw": "/m/019jd",
+            "cat": 0
+        },
+        "Vélib' Métropole": {
+            "kw": "/m/02vxzq8",
+            "cat": 0
+        },
+        "Carte Navigo": {
+            "kw": "/m/092n7q",
+            "cat": 0
+        },
+        "SNCF": {
+            "kw": "/g/11bw21v8gc",
+            "cat": 0
+        },
+        "Air France": {
+            "kw": "/m/0h7k5",
+            "cat": 0
+        }
+    },
+    "hebergement_restauration": {
+        "Restaurant": {
+            "kw": "/m/06l8d",
+            "cat": 0
+        },
+        "hôtel": {
+            "kw": "/m/03pty",
+            "cat": 0
+        },
+        "bar": {
+            "kw": "/m/01nz0z",
+            "cat": 0
+        },
+        "Traiteur organisateur de réceptions": {
+            "kw": "/m/02yn76",
+            "cat": 0
+        }
+    },
+    "infocom": {
+        "télévision": {
+            "kw": "/m/07c52",
+            "cat": 0
+        },
+        "Bouygues": {
+            "kw": "/m/02r6_2",
+            "cat": 0
+        },
+        "SFR": {
+            "kw": "/m/06txzw",
+            "cat": 0
+        },
+        "Orange": {
+            "kw": "/m/0jd05",
+            "cat": 0
+        },
+        "Free": {
+            "kw": "/m/0cy_5y",
+            "cat": 0
+        }
+    },
+    "arts_spectacles": {
+        "cinéma": {
+            "kw": "cinéma",
+            "cat": 0
+        },
+        "musée": {
+            "kw": "/m/09cmq",
+            "cat": 0
+        },
+        "théâtre": {
+            "kw": "/m/03qsdpk",
+            "cat": 0
+        },
+        "concert": {
+            "kw": "/m/01jddz",
+            "cat": 0
+        },
+        "spectacle": {
+            "kw": "/g/1218rjn6",
+            "cat": 0
+        },
+        "exposition": {
+            "kw": "/m/0fq22vb",
+            "cat": 0
+        }
+    }
+}

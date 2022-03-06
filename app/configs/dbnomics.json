@@ -1,0 +1,82 @@
+{
+    "alim": {
+        "dataset_code": "CONSO-MENAGES-2014",
+        "serie_code": "M.CONSOMMATION_MENSUELLE_MENAGES_BIENS.ALIMENTAIRE.VALEUR_ABSOLUE.FM.EUROS.CVS-CJO",
+        "label": "Alimentaire"
+    },
+    "alim_hors_tabac": {
+        "dataset_code": "CONSO-MENAGES-2014",
+        "serie_code": "M.CONSOMMATION_MENSUELLE_MENAGES_BIENS.ALIMENTAIRE-HORS-TABAC.VALEUR_ABSOLUE.FM.EUROS.CVS-CJO.2014",
+        "label": "Alimentaire hors tabac"
+    },
+    "biens_fabriques": {
+        "dataset_code": "CONSO-MENAGES-2014",
+        "serie_code": "M.CONSOMMATION_MENSUELLE_MENAGES_BIENS.BIENS-FABRIQUES.VALEUR_ABSOLUE.FM.EUROS.CVS-CJO",
+        "label": "Bien fabriqués"
+    },
+    "biens_durables": {
+        "dataset_code": "CONSO-MENAGES-2014",
+        "serie_code": "M.CONSOMMATION_MENSUELLE_MENAGES_BIENS.BIENS-DURABLES.VALEUR_ABSOLUE.FM.EUROS.CVS-CJO",
+        "label": "Biens durables"
+    },
+    "auto": {
+        "dataset_code": "CONSO-MENAGES-2014",
+        "serie_code": "M.CONSOMMATION_MENSUELLE_MENAGES_BIENS.MATERIELS-TRANSPORT.VALEUR_ABSOLUE.FM.EUROS.CVS-CJO",
+        "label": "Matériels de transport"
+    },
+    "eq_logement": {
+        "dataset_code": "CONSO-MENAGES-2014",
+        "serie_code": "M.CONSOMMATION_MENSUELLE_MENAGES_BIENS.EQUIPEMENT-LOGEMENT.VALEUR_ABSOLUE.FM.EUROS.CVS-CJO",
+        "label": "Equipement du logement"
+    },
+    "habillement": {
+        "dataset_code": "CONSO-MENAGES-2014",
+        "serie_code": "M.CONSOMMATION_MENSUELLE_MENAGES_BIENS.TEXTILE.VALEUR_ABSOLUE.FM.EUROS.CVS-CJO",
+        "label": "Textile-cuir"
+    },
+    "autres_bd": {
+        "dataset_code": "CONSO-MENAGES-2014",
+        "serie_code": "M.CONSOMMATION_MENSUELLE_MENAGES_BIENS.BIENS-FABRIQUES-AUTRES.VALEUR_ABSOLUE.FM.EUROS.CVS-CJO",
+        "label": "Autres biens fabriqués"
+    },
+    "energie": {
+        "dataset_code": "CONSO-MENAGES-2014",
+        "serie_code": "M.CONSOMMATION_MENSUELLE_MENAGES_BIENS.ENERGIE_DEC2.VALEUR_ABSOLUE.FM.EUROS.CVS-CJO",
+        "label": "Enérgie, eau et déchets, cokéfaction et raffinage"
+    },
+    "energie_eau_dechets": {
+        "dataset_code": "CONSO-MENAGES-2014",
+        "serie_code": "M.CONSOMMATION_MENSUELLE_MENAGES_BIENS.ENERGIE_DE.VALEUR_ABSOLUE.FM.EUROS.CVS-CJO",
+        "label": "Enérgie, eau et déchets"
+    },
+    "cokefaction_raffinage": {
+        "dataset_code": "CONSO-MENAGES-2014",
+        "serie_code": "M.CONSOMMATION_MENSUELLE_MENAGES_BIENS.ENERGIE_C2.VALEUR_ABSOLUE.FM.EUROS.CVS-CJO",
+        "label": "Cokéfaction et raffinage"
+    },
+    "total_bien": {
+        "dataset_code": "CONSO-MENAGES-2014",
+        "serie_code": "M.CONSOMMATION_MENSUELLE_MENAGES_BIENS.BIENS.VALEUR_ABSOLUE.FM.EUROS.CVS-CJO",
+        "label": "Alimentaire"
+    },
+    "transports": {
+        "dataset_code": "IPS-2015-SERVICES",
+        "serie_code": "M.BDM_EUR.IPRODSERV.H.INDICE_VOL.FE.SO.CVS-CJO.2015",
+        "label": "Transports et entreposage"
+    },
+    "hebergement_restauration": {
+        "dataset_code": "IPS-2015-SERVICES",
+        "serie_code": "M.BDM_EUR.IPRODSERV.I.INDICE_VOL.FE.SO.CVS-CJO",
+        "label": "Hébergement et restauration"
+    },
+    "arts_spectacles": {
+        "dataset_code": "IPS-2015-SERVICES",
+        "serie_code": "M.BDM.IPRODSERV.R.INDICE_VOL.FE.SO.CVS-CJO.2015",
+        "label": "Spectacles et activités récréatives"
+    },
+    "total_services": {
+        "dataset_code": "IPS-2015-SERVICES",
+        "serie_code": "M.BDM.IPRODSERV.TOTSER.INDICE_VOL.FE.SO.CVS-CJO.2015",
+        "label": "Services (total)"
+    }
+}

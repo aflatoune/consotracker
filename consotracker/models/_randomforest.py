@@ -23,6 +23,7 @@ class RandomForest(Model):
         y {pd.DataFrame}
             Target relative to X.
         """
+        X, y = self._check_data(X, y)
         self.dates = X.index
         self.endog = y.values.flatten()
         self.model = self.model.fit(X, y)

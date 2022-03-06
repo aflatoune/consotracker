@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 class Web:
     def __init__(self, kwargs=None):
         self.kwargs = kwargs if isinstance(kwargs, dict) else {}
@@ -12,7 +13,7 @@ class Web:
 
     def set_config(self):
         st.set_page_config(page_title=self.title,
-                           page_icon=None,
+                           page_icon="chart_with_upwards_trend",
                            layout='wide',
                            initial_sidebar_state='expanded',
                            menu_items={"Get help": None,
