@@ -21,4 +21,4 @@ RUN pip3 --no-cache-dir install -e . \
     && chown -R ${NAME}. /home/
 WORKDIR /home/app
 USER ${NAME}
-CMD [ "streamlit", "run", "index.py" ]
+CMD [ "streamlit", "run", "main.py" ]
