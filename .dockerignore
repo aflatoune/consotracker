@@ -1,0 +1,14 @@
+# specific files
+.gitignore
+Dockerfile
+
+# folders
+.ipynb_checkpoints/
+__pycache__/
+.github/
+.git/
+
+# patterns
+**/*.egg-info
+**/*.md
+**/*.ipynb

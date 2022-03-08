@@ -1,5 +1,6 @@
 import json
 import logging as lg
+import os
 import streamlit as st
 from pages.serie import Serie
 from pages.web import Web
@@ -11,6 +12,7 @@ DICT_MODELS = {'LinearRegression': LinearRegression,
                'PenalizedRegression': PenalizedRegression,
                'RandomForest': RandomForest}
 
+VERSION = os.environ.get('VERSION', 'v0.0.0')
 
 if __name__ == '__main__':
     st_web = Web()
@@ -44,3 +46,6 @@ if __name__ == '__main__':
         st_serie.plot_alt2(predicted_df, graph)
         st_serie.add_metrics(predicted_df, metrics)
         st_web.v_spacer(height=3)
+    # version
+    st_web.v_spacer(height=10, sb=True)
+    st.sidebar.caption(f"Version : {VERSION}")
