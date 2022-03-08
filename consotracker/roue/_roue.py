@@ -39,11 +39,11 @@ class ROUE():
 
         forecast_window {tuple} -- (default: {None})
             A tuple of two strings: the 1st indicates the last date supposed
-            to be observed when training `model` for the first time, the 2nd one
-            indicates the last date for which an out-of-sample prediction is
-            computed. Concretely, a oot prediction is made for all dates such
-            that forecast_window[0] < date =< forecast_window[1] (must be in
-            YYYY/MM/DD format).
+            to be observed when training `model` for the first time, the 2nd
+            one indicates the last date for which an out-of-sample prediction
+            is computed. Concretely, a oot prediction is made for all dates
+            such that forecast_window[0] < date =< forecast_window[1]
+            (must be in YYYY/MM/DD format).
 
         test_size {int} -- (default: {1})
             Size of the rolling test set.
@@ -98,23 +98,22 @@ class ROUE():
             first_idx, *other_idx = indexes
 
             # Get fitted pred
-            best_model.fit(X.loc[first_idx[0]], y.loc[first_idx[0]])
-            in_values = best_model.predict(X.loc[first_idx[0]])
-            out_values.append(best_model.predict(X.loc[first_idx[1]]))
+            best_model.fit(X.iloc[first_idx[0], :], y.iloc[first_idx[0]])
+            in_values = best_model.predict(X.iloc[first_idx[0], :])
+            out_values.append(best_model.predict(X.iloc[first_idx[1], :]))
 
             # Get test pred
             for train_index, test_index in other_idx:
-                best_model.fit(X.loc[train_index], y.loc[train_index])
+                best_model.fit(X.iloc[train_index, :], y.iloc[train_index])
                 y_pred = best_model.predict(
-                    X.loc[test_index].values.reshape(1, -1))
+                    X.iloc[test_index, :].values.reshape(1, -1))
                 out_values.append(y_pred)
 
             out_values = np.concatenate(out_values)
             pred = np.concatenate([in_values, out_values])
-            pred = pd.DataFrame(pred, columns=["pred"])
-            self.predicted_df = pd.concat(
-                [y.rename(columns={y.columns[0]: "obs"}), pred], axis=1
-            )
+            predicted_df = pd.DataFrame(np.column_stack([y, pred]),
+                                        columns=["obs", "pred"])
+            self.predicted_df = predicted_df
 
     def plot(self, date=None):
         """
