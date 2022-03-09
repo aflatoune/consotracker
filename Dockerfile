@@ -7,6 +7,7 @@ ENV \
     NAME=consotracker \
     STREAMLIT_DEV=true \
     MPLBACKEND=agg \
+    DOWNLOAD_VERBOSE=1 \
     STREAMLIT_GLOBAL_DEVELOPMENT_MODE=false \
     STREAMLIT_CLIENT_CACHING=false \
     STREAMLIT_SERVER_HEADLESS=true \
@@ -18,7 +19,7 @@ WORKDIR /home
 RUN pip3 --no-cache-dir install -e . \
     && groupadd -g 1001 ${NAME} \
     && useradd -rMl -u 1001 -g ${NAME} ${NAME} \
-    && chown -R ${NAME}. /home/
-WORKDIR /home/app
+    && chown -R ${NAME}. /home/ \
+    if [[ ${STREAMLIT_DEV} = true ]]; then; usermod -aG sudo {NAME} ; fi
 USER ${NAME}
-CMD [ "streamlit", "run", "main.py" ]
+CMD [ "streamlit", "run", "app/main.py" ]

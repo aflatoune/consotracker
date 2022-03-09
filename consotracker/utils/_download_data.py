@@ -1,9 +1,12 @@
 import pandas as pd
 import logging as lg
+import os
+from distutils.util import strtobool
 from pytrends.request import TrendReq
 from pytrends.exceptions import ResponseError
 from dbnomics import fetch_series
 
+VERBOSE = strtobool(os.environ.get('DOWNLOAD_VERBOSE', 'true'))
 
 def download_gtrends(dict_kw, timeframe="all", geo="FR"):
     dict_dfs = {}
@@ -19,9 +22,13 @@ def download_gtrends(dict_kw, timeframe="all", geo="FR"):
                 )
                 gtrends = pytrends.interest_over_time()
                 l.append(gtrends)
-            except ResponseError:
+            except ResponseError as e:
+                if VERBOSE:
+                    lg.warning(f'ERROR: {e}')
                 lg.warning(f"Download failed for {kw}. Check your keyword.")
-        dict_dfs[sect] = pd.concat(l, axis=1).drop(labels=["isPartial"], axis=1)
+        df = pd.concat(l, axis=1).drop(labels=["isPartial"], axis=1)
+        if l:
+            dict_dfs[sect] = df
     return dict_dfs
 
 
@@ -40,8 +47,13 @@ def download_dbseries(dict_dbcodes, start="2004-01-01"):
         try:
             dict_series[sect] = fetch_series(
                 'INSEE', dataset_code, serie_code)
-        except ValueError:
+        except ValueError as e:
+            if VERBOSE:
+                lg.warning(f'ERROR: {e}')
             lg.warning(f'Download failed for {dataset_code}/{serie_code}.')
+
+    if not dict_series:
+        return dict_series
 
     for sect, df in dict_series.items():
         df.set_index("period", drop=False, inplace=True)
