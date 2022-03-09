@@ -40,7 +40,7 @@ if __name__ == '__main__':
     for sector in sector_list:
         st.subheader(f'{dict_dbcodes[sector]["label"]}')
         graph = st.empty()
-        metrics = st.empty()
+        metrics = st.columns(3)
         st_web.v_spacer(height=0, sb=False)
         with st.spinner(text="Chargement"):
             graph.empty()
