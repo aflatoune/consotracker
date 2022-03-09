@@ -23,7 +23,7 @@ class Model(ABC):
         pass
 
     def plot(self, start=None, **kwargs):
-        """Plot method for class Method
+        """Plot method for class Model
 
         Parameters
         ----------

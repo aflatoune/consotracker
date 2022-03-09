@@ -80,7 +80,7 @@ class ROUE():
         X {pd.DataFrame}
             Features data.
 
-        y {pd.DataFrame}
+        y {pd.Series}
             Target relative to X.
         """
         tscv = TimeSeriesSplit(n_splits=self.n_splits,
