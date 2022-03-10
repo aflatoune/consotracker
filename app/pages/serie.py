@@ -51,7 +51,7 @@ class Serie:
         ).interactive()
         box.altair_chart(c, use_container_width=True)
 
-    def plot_alt2(self, df, box):
+    def plot_alt_v2(self, df, box):
         melted_df = df.melt('date', var_name='type', value_name='value')
         domain = [melted_df.value.min(), melted_df.value.max()]
 
@@ -76,15 +76,18 @@ class Serie:
                            text).properties(width=600, height=300)
         box.altair_chart(layers, use_container_width=True)
 
-    def add_metrics(self, df, box):
+    def add_metrics(self, df, boxes):
         data_select = df.dropna()
-        metric1 = mae(obs=data_select.obs,
+        mae_metric = mae(obs=data_select.obs,
                       pred=data_select.pred, round_value=3)
-        metric2 = rmse(obs=data_select.obs,
+        rmse_metric = rmse(obs=data_select.obs,
                        pred=data_select.pred, round_value=3)
-        metric3 = mda(obs=data_select.obs,
+        mda_metric = mda(obs=data_select.obs,
                       pred=data_select.pred, round_value=3)
-        st.write("MAE:", metric1, " RMSE: ", metric2, " MDA: ", metric3)
+        list_metric = [mae_metric, rmse_metric, mda_metric]
+        list_names = ["MAE", "RMSE", "MDA"]
+        for box, metr, name in zip(boxes, list_metric, list_names):
+            box.write(f'{name} : {metr}')
 
 
 class SideBar:

@@ -1,8 +1,10 @@
 import json
+import os
 import logging as lg
 import streamlit as st
 from pages.serie import Serie
 from pages.web import Web
+from distutils.util import strtobool
 
 from consotracker.models import LinearRegression, PenalizedRegression, RandomForest
 from consotracker.utils import match_dict
@@ -11,14 +13,21 @@ DICT_MODELS = {'LinearRegression': LinearRegression,
                'PenalizedRegression': PenalizedRegression,
                'RandomForest': RandomForest}
 
+VERSION = os.environ.get('VERSION', 'v0.0.0')
+STREAMLIT_DEV = strtobool(os.environ.get('STREAMLIT_DEV', 'true'))
+PATH_CONFIG = os.path.join('app', 'configs')
+
 
 if __name__ == '__main__':
     st_web = Web()
+    st_web.hide_tag()
+    if not STREAMLIT_DEV:
+        st_web.hide_dev_menu()
     st_serie = Serie()
     model_name = st.sidebar.selectbox(
         "Modèle", list(DICT_MODELS.keys()), index=0)
 
-    with open("app/configs/gtrends.json") as f1, open ("app/configs/dbnomics.json") as f2:
+    with open(os.path.join(PATH_CONFIG,"gtrends.json")) as f1, open (os.path.join(PATH_CONFIG, "dbnomics.json")) as f2:
         dict_kw = json.load(f1)
         dict_dbcodes = json.load(f2)
 
@@ -31,7 +40,7 @@ if __name__ == '__main__':
     for sector in sector_list:
         st.subheader(f'{dict_dbcodes[sector]["label"]}')
         graph = st.empty()
-        metrics = st.empty()
+        metrics = st.columns(3)
         st_web.v_spacer(height=0, sb=False)
         with st.spinner(text="Chargement"):
             graph.empty()
@@ -41,6 +50,10 @@ if __name__ == '__main__':
                 DICT_MODELS[model_name], sector)
         predicted_df = lm_model.predicted_df
         predicted_df = predicted_df.round({"obs": 2, "pred": 2})
-        st_serie.plot_alt2(predicted_df, graph)
+        st_serie.plot_alt_v2(predicted_df, graph)
         st_serie.add_metrics(predicted_df, metrics)
         st_web.v_spacer(height=3)
+
+    # version
+    st_web.v_spacer(height=10, sb=True)
+    st.sidebar.caption(f"Version : {VERSION}")
