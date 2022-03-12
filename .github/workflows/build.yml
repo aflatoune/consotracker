@@ -16,7 +16,7 @@ jobs:
     env:
       NAME_APP: ${{ inputs.NAME_APP }}
       VERSION: ${{ inputs.VERSION }}
-      
+
     steps:
     - name: Prepare before build
       run: sudo apt-get update -y
@@ -34,8 +34,12 @@ jobs:
       run: |
         bash ci/github/build.sh
 
+    - name: Save artifact
+      run: |
+        docker save ${NAME_APP}:${VERSION} -o build/docker-image.tar
+
     - name: Create build-output artifact
       uses: actions/upload-artifact@master
       with:
-        name: build-output
+        name: image-docker
         path: build/
