@@ -9,8 +9,6 @@ jobs:
     with:
       VERSION: latest
       NAME_APP: consotracker
-    secrets:
-      TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   push:
     runs-on: ubuntu-latest
