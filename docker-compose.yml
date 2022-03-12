@@ -2,11 +2,11 @@ version: '3'
 
 services:
     web:
-        image: ${NAME}:{VERSION}
+        image: ${NAME_APP}:{VERSION:-latest}
         build:
             dockerfile: ./Dockerfile
             context: .
         environment:
-            - PORT=${PORT}
+            - PORT=${PORT:-8501}
         ports:
-            - ${PORT}:${PORT}
+            - ${PORT:-8501}:${PORT:-8501}
