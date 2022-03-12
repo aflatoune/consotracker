@@ -13,7 +13,7 @@ jobs:
     steps:
 
       - name: Build
-        uses: aflatoune/consotracker/.github/workflows/build.yml
+        uses: aflatoune/consotracker/.github/workflows/build.yml@main
         with:
           VERSION: latest
         secrets:
