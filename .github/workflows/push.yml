@@ -4,21 +4,28 @@ on:
       - main
 
 jobs:
+  build:
+    uses: aflatoune/consotracker/.github/workflows/build.yml@main
+      with:
+        VERSION: latest
+        NAME_APP: consotracker
+    secrets:
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   push:
     runs-on: ubuntu-latest
+    needs: build
     env:
       NAME_APP: consotracker
       VERSION: latest
       OWNER: ${{ github.repository_owner }}
     steps:
 
-      - name: Build
-        uses: aflatoune/consotracker/.github/workflows/build.yml@main
+      - name: Download build-output artifact
+        uses: actions/download-artifact@master
         with:
-          VERSION: latest
-        secrets:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NAME_OWNER: ${{ secrets.github.actor }}
+          name: build-output
+          path: build/
 
       - name: Login to Heroku Registry
         uses: docker/login-action@v1
