@@ -13,6 +13,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      NAME_APP: ${{ inputs.NAME_APP }}
+      VERSION: ${{ inputs.VERSION }}
+      
     steps:
     - name: Prepare before build
       run: sudo apt-get update -y
