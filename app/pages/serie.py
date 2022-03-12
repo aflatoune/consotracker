@@ -3,10 +3,8 @@ import altair as alt
 import pandas as pd
 
 from dateutil.relativedelta import relativedelta
-from consotracker.models import LinearRegression, PenalizedRegression, RandomForest
 from consotracker.preprocessing import Processing
-from consotracker.utils import (download_dbseries, download_gtrends,
-                                match_dict, mae, mda, rmse)
+from consotracker.utils import mae, mda, rmse
 
 alt.renderers.set_embed_options(actions=False)
 
@@ -14,12 +12,6 @@ alt.renderers.set_embed_options(actions=False)
 class Serie:
     def __init__(self):
         pass
-
-    def dl_data(self, dict_kw, dict_dbcodes):
-        match_dict(dict_kw, dict_dbcodes)
-        dict_dfs = download_gtrends(dict_kw)
-        dict_series = download_dbseries(dict_dbcodes)
-        return dict_dfs, dict_series
 
     def create_serie(self, dict_dfs, dict_series, model, choice):
         X = dict_dfs[choice]
