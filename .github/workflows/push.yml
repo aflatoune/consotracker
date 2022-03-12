@@ -6,11 +6,9 @@ on:
 jobs:
   build:
     uses: aflatoune/consotracker/.github/workflows/build.yml@main
-      with:
-        VERSION: latest
-        NAME_APP: consotracker
-    secrets:
-      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      VERSION: latest
+      NAME_APP: consotracker
 
   push:
     runs-on: ubuntu-latest
