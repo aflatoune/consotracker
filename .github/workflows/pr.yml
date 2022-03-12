@@ -11,7 +11,7 @@ jobs:
       NAME: "consotracker"
     steps:
       - name: Build
-        uses: aflatoune/consotracker/.github/workflows/build.yml
+        uses: aflatoune/consotracker/.github/workflows/build.yml@deploy
         with:
           VERSION: "latest"
         secrets:
