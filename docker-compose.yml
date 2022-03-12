@@ -2,7 +2,7 @@ version: '3'
 
 services:
     web:
-        image: ${NAME_APP}:{VERSION:-latest}
+        image: ${NAME_APP}:${VERSION:-latest}
         build:
             dockerfile: ./Dockerfile
             context: .
