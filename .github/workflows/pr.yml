@@ -1,0 +1,22 @@
+
+
+on:
+  pull_request:
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      NAME: "consotracker"
+    steps:
+      - name: Build
+        uses: aflatoune/consotracker/.github/workflows/build.yml
+        with:
+          VERSION: "latest"
+        secrets:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NAME_OWNER: ${{ secrets.github.actor }}
+
+
+

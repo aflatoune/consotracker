@@ -7,49 +7,82 @@ from pytrends.request import TrendReq
 from pytrends.exceptions import ResponseError
 from dbnomics import fetch_series
 
-STREAMLIT_DOWNLOAD_INFO = strtobool(os.environ.get('STREAMLIT_DOWNLOAD_INFO', 'true'))
+STREAMLIT_DOWNLOAD_INFO = strtobool(
+    os.environ.get('STREAMLIT_DOWNLOAD_INFO', 'true'))
 LEVEL = lg.INFO if STREAMLIT_DOWNLOAD_INFO == 'true' else None
 lg.basicConfig(level=LEVEL)
 
+
 class Download:
-    def __init__(self, path_config):
+    def __init__(self, path_config, db=None):
         with open(os.path.join(path_config, "gtrends.json")) as f1:
             self.dict_kw = json.load(f1)
-        with open (os.path.join(path_config, "dbnomics.json")) as f2:
+        with open(os.path.join(path_config, "dbnomics.json")) as f2:
             self.dict_dbcodes = json.load(f2)
+        self.db = db
 
     def dl_data(self):
         self.match_dict(self.dict_kw, self.dict_dbcodes)
-        dict_dfs = self.download_gtrends(self.dict_kw)
-        dict_series = self.download_dbseries(self.dict_dbcodes)
+        dict_dfs = self.download_gtrends(self.dict_kw, redis_db=self.db, time=86400)
+        dict_series = self.download_dbseries(self.dict_dbcodes, redis_db=self.db, time=86400)
         return dict_dfs, dict_series
 
-    def download_gtrends(self, dict_kw, timeframe="all", geo="FR"):
+    def check_db_key(self, redis_db, key):
+        df = None
+        if redis_db is not None:
+            if redis_db.get(key) is not None:
+                df = pd.read_json(redis_db.get(key))
+                lg.info(f'Reading {key} sector in redis')
+        return df
+
+    def write_db_key(self, redis_db, key: str, value: pd.DataFrame, **kwargs):
+        if redis_db:
+            redis_db.setex(name=key,
+                           time=kwargs.get('time', 100),
+                           value=value.to_json())
+            lg.info(f'Writing {key} sector in redis')
+
+    def download_gtrends(
+            self, dict_kw, timeframe="all", geo="FR", redis_db=None, **kwargs):
         dict_dfs = {}
         pytrends = TrendReq()
+
         for sect, subdict in dict_kw.items():
             l = []
-            for subsubdict in subdict.values():
-                kw = subsubdict["kw"]
-                cat = subsubdict["cat"]
-                try:
-                    pytrends.build_payload(
-                        [kw], cat=cat, timeframe=timeframe, geo=geo, gprop=''
-                    )
-                    gtrends = pytrends.interest_over_time()
-                    l.append(gtrends)
-                    lg.info(f'Download success for {kw}')
-                except ResponseError as e:
-                    lg.warning(f"Download failed for {kw} with error {e}. Check your keyword.")
-            if l:
-                df = pd.concat(l, axis=1).drop(labels=["isPartial"], axis=1)
-            else:
-                df = pd.DataFrame([])
+            df = self.check_db_key(redis_db=redis_db, key=sect)
+
+            if not isinstance(df, pd.DataFrame):
+                for subsubdict in subdict.values():
+                    kw = subsubdict["kw"]
+                    cat = subsubdict["cat"]
+                    try:
+                        pytrends.build_payload([kw],
+                                               cat=cat,
+                                               timeframe=timeframe,
+                                               geo=geo, gprop='')
+                        gtrends = pytrends.interest_over_time()
+                        l.append(gtrends)
+                        lg.info(f'Download success for {kw}')
+                    except ResponseError as e:
+                        lg.warning(
+                            f"Download failed for {kw}",
+                            ". Check your keyword.")
+
+                if l:
+                    df = pd.concat(l, axis=1).drop(
+                        labels=["isPartial"], axis=1)
+                    self.write_db_key(redis_db=redis_db,
+                                      key=sect,
+                                      value=df,
+                                      **kwargs)
+                else:
+                    df = pd.DataFrame([])
             dict_dfs[sect] = df
+
         return dict_dfs
 
-
-    def download_dbseries(self, dict_dbcodes, start="2004-01-01"):
+    def download_dbseries(
+            self, dict_dbcodes, start="2004-01-01", redis_db=None, **kwargs):
         """Download economic series
 
         Parameters
@@ -61,12 +94,26 @@ class Download:
         for sect, subdict in dict_dbcodes.items():
             dataset_code = subdict["dataset_code"]
             serie_code = subdict["serie_code"]
-            try:
-                dict_series[sect] = fetch_series(
-                    'INSEE', dataset_code, serie_code)
-                lg.info(f'Download success for {dataset_code}/{serie_code}.')
-            except ValueError as e:
-                lg.warning(f'Download failed for {dataset_code}/{serie_code} with error {e}.')
+
+            df = self.check_db_key(redis_db=redis_db, key=sect + '_db')
+            if not isinstance(df, pd.DataFrame):
+                try:
+                    df = fetch_series('INSEE',
+                                      dataset_code,
+                                      serie_code)
+                    dict_series[sect] = df
+                    lg.info(
+                        f'Download success for {dataset_code}/{serie_code}.')
+                    self.write_db_key(redis_db=redis_db,
+                                      key=sect + '_db',
+                                      value=df,
+                                      **kwargs)
+                except ValueError as e:
+                    lg.warning(
+                        f'Download failed for {dataset_code}',
+                        f'/{serie_code}.')
+            else:
+                dict_series[sect] = df
 
         if not dict_series:
             return dict_series
@@ -74,7 +121,8 @@ class Download:
         for sect, df in dict_series.items():
             df.set_index("period", drop=False, inplace=True)
             if start is not None:
-                dict_series[sect] = df[df["period"] >= start]["original_value"]
+                dict_series[sect] = df[pd.to_datetime(
+                    df["period"]) >= start]["original_value"]
             else:
                 dict_series[sect] = df["original_value"]
 

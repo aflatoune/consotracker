@@ -1,9 +1,8 @@
 #!/bin/bash
-set -x
+#set -x
 
 docker tag ${NAME_APP}:${VERSION} registry.heroku.com/${NAME_APP}/web:${VERSION}
 IMAGE_ID=$(docker inspect --format="{{.Id}}" registry.heroku.com/${NAME_APP}/web)
-echo ${HEROKU_TOKEN} | docker login --username=${HEROKU_USERNAME} --password-stdin registry.heroku.com
 docker push registry.heroku.com/${NAME_APP}/web:${VERSION}
 
 curl --netrc -X PATCH https://api.heroku.com/apps/${NAME_APP}/formation \
@@ -18,3 +17,4 @@ curl --netrc -X PATCH https://api.heroku.com/apps/${NAME_APP}/formation \
   -H "Content-Type: application/json" \
   -H "Accept: application/vnd.heroku+json; version=3.docker-releases"\
   -H "Authorization: Bearer ${HEROKU_TOKEN}"
+

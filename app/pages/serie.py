@@ -20,7 +20,7 @@ class Serie:
         X = processor.fit(X)
 
         sup_date = y.index.max()
-        pred_date = sup_date + relativedelta(months=1)
+        #pred_date = pd.to_datetime(sup_date) + relativedelta(months=1)
         X_train = X[X.index <= sup_date]
         X_test = X.loc[sup_date]
 

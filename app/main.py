@@ -6,6 +6,7 @@ from consotracker.utils import Download
 from pages import Serie
 from pages import Web
 
+from consotracker.redis import Redis
 from consotracker.models import LinearRegression, PenalizedRegression, RandomForest
 
 DICT_MODELS = {'LinearRegression': LinearRegression,
@@ -17,15 +18,13 @@ STREAMLIT_DEV = strtobool(os.environ.get('STREAMLIT_DEV', 'true'))
 PATH_CONFIG = os.path.join('app', 'configs')
 
 if __name__ == '__main__':
-    st_web = Web()
-    st_web.hide_tag()
-    if not STREAMLIT_DEV:
-        st_web.hide_dev_menu()
+    st_web = Web(hide_dev_menu=STREAMLIT_DEV)
     st_serie = Serie()
     model_name = st.sidebar.selectbox(
         "Modèle", list(DICT_MODELS.keys()), index=0)
 
-    dw = Download(PATH_CONFIG)
+    db = Redis(host='localhost', port=6379, db=0)
+    dw = Download(PATH_CONFIG, db=db.api)
 
     sector_list = dw.match_dict(dw.dict_kw, dw.dict_dbcodes)
     if "dict_dfs" not in st.session_state or "dict_series" not in st.session_state:
