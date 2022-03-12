@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+    web:
+        image: ${NAME}:{VERSION}
+        build:
+            dockerfile: ./Dockerfile
+            context: .
+        environment:
+            - PORT=${PORT}
+        ports:
+            - ${PORT}:${PORT}

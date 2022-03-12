@@ -1,0 +1,47 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    env:
+      NAME_APP: consotracker
+      VERSION: latest
+      OWNER: ${{ github.repository_owner }}
+    steps:
+
+      - name: Build
+        uses: aflatoune/consotracker/.github/workflows/build.yml@main
+        with:
+          VERSION: latest
+        secrets:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NAME_OWNER: ${{ secrets.github.actor }}
+
+      - name: Login to Heroku Registry
+        uses: docker/login-action@v1
+        with:
+          registry: registry.heroku.com
+          username: ${{ secrets.HEROKU_TOKEN }}
+          password: ${{ secrets.HEROKU_USERNAME }}
+
+      - name: Push on Heroku registry and deploy
+        run: |
+          bash ci/heroku/deploy.sh
+
+      - name: Login to Github Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.NAME_OWNER }}
+          password: ${{ secrets.TOKEN }}
+
+      - name: Push on ghcr registry
+        run: |
+          bash ci/github/push.sh
+
+
+
+

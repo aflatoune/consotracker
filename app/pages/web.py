@@ -2,7 +2,7 @@ import streamlit as st
 
 
 class Web:
-    def __init__(self, kwargs=None):
+    def __init__(self, **kwargs):
         self.kwargs = kwargs if isinstance(kwargs, dict) else {}
         self.title = self.kwargs.get('page_title', 'ConsoTracker')
         self.set_config()
