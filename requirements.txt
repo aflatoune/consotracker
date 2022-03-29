@@ -1,3 +1,4 @@
+click==8.0.0
 dbnomics==1.2.2
 json5==0.9.5
 statsmodels==0.13.0
