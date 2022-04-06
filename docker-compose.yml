@@ -10,3 +10,11 @@ services:
             - PORT=${PORT:-8501}
         ports:
             - ${PORT:-8501}:${PORT:-8501}
+
+    bdd:
+        container_name: consotracker_bdd
+        depends_on:
+            - web
+        image: redis:latest
+        ports:
+            - '6379:6379'

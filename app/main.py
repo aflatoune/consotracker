@@ -16,6 +16,7 @@ DICT_MODELS = {'LinearRegression': LinearRegression,
 VERSION = os.environ.get('VERSION', 'v0.0.0')
 STREAMLIT_DEV = strtobool(os.environ.get('STREAMLIT_DEV', 'true'))
 PATH_CONFIG = os.path.join('app', 'configs')
+CONTAINER_NAME = os.environ.get('CONTAINER_NAME', 'consotracker_bdd')
 
 if __name__ == '__main__':
     st_web = Web(hide_dev_menu=STREAMLIT_DEV)
@@ -23,7 +24,7 @@ if __name__ == '__main__':
     model_name = st.sidebar.selectbox(
         "Modèle", list(DICT_MODELS.keys()), index=0)
 
-    db = Redis(host='localhost', port=6379, db=0)
+    db = Redis(host=CONTAINER_NAME, port=6379, db=0)
     dw = Download(PATH_CONFIG, db=db.api)
 
     sector_list = dw.match_dict(dw.dict_kw, dw.dict_dbcodes)
